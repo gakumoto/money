@@ -27,4 +27,7 @@ scripts/logs/
 # Claude Code internals
 .claude/
 .agents/
-.company/
+
+# Dashboard build artifacts
+dashboard/.next/
+dashboard/node_modules/

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+  <title id="title">Claudeに投げる前の3行テンプレ 手帳ラフ</title>
+  <desc id="desc">丸や線、メモ感を増やした実験ログ風の保存画像</desc>
+  <defs>
+    <pattern id="lines" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M0 22 H28" stroke="#ddd4c7" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="19" flood-color="#8b847a" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1350" fill="#f5f0e6"/>
+  <rect width="1080" height="1350" fill="url(#lines)" opacity="0.62"/>
+
+  <g transform="rotate(-2.2 546 668)" filter="url(#shadow2)">
+    <rect x="104" y="104" width="872" height="1130" rx="26" fill="#fffaf2"/>
+    <path d="M188 134 V1200" stroke="#d9a29a" stroke-width="3.5" opacity="0.82"/>
+    <circle cx="144" cy="248" r="11" fill="#e9dfcf"/>
+    <circle cx="144" cy="492" r="11" fill="#e9dfcf"/>
+    <circle cx="144" cy="736" r="11" fill="#e9dfcf"/>
+    <circle cx="144" cy="980" r="11" fill="#e9dfcf"/>
+  </g>
+
+  <g transform="rotate(-7 184 130)">
+    <rect x="110" y="92" width="154" height="38" rx="8" fill="#d8c39f"/>
+  </g>
+  <g transform="rotate(5 874 128)">
+    <rect x="810" y="92" width="166" height="40" rx="8" fill="#d8c39f"/>
+  </g>
+
+  <text x="224" y="178" fill="#8b847a" font-family="Georgia, 'Times New Roman', serif" font-size="23" letter-spacing="3">PROMPT NOTE / QUICK START</text>
+  <text x="224" y="252" fill="#22201d" font-family="'Yu Gothic', 'Hiragino Sans', sans-serif" font-size="60" font-weight="700">Claudeに投げる前の</text>
+  <text x="224" y="324" fill="#22201d" font-family="'Yu Gothic', 'Hiragino Sans', sans-serif" font-size="60" font-weight="700">3行テンプレ</text>
+
+  <path d="M224 344 C352 360, 470 322, 628 344" fill="none" stroke="#30544d" stroke-width="7" stroke-linecap="round" opacity="0.82"/>
+  <text x="674" y="350" fill="#30544d" font-family="'Segoe Print', 'Comic Sans MS', cursive" font-size="25" transform="rotate(5 674 350)">3行で十分</text>
+
+  <g font-family="'Yu Gothic', 'Hiragino Sans', sans-serif">
+    <circle cx="244" cy="472" r="30" fill="none" stroke="#b85c4b" stroke-width="6"/>
+    <text x="232" y="484" fill="#22201d" font-size="34" font-weight="700">1</text>
+    <text x="306" y="456" fill="#22201d" font-size="40" font-weight="700">誰向け</text>
+    <text x="306" y="508" fill="#6e665d" font-size="30">AI副業を始めたい会社員向け</text>
+    <path d="M306 520 C392 516, 472 530, 558 520" fill="none" stroke="#b85c4b" stroke-width="4.5" stroke-linecap="round" opacity="0.72"/>
+
+    <circle cx="258" cy="684" r="30" fill="none" stroke="#b85c4b" stroke-width="6"/>
+    <text x="246" y="696" fill="#22201d" font-size="34" font-weight="700">2</text>
+    <text x="320" y="668" fill="#22201d" font-size="40" font-weight="700">何を作る</text>
+    <text x="320" y="720" fill="#6e665d" font-size="30">Threads1本 / note見出し3つ</text>
+    <text x="734" y="718" fill="#8b847a" font-family="'Segoe Print', 'Comic Sans MS', cursive" font-size="23" transform="rotate(-3 734 718)">まずはここだけ</text>
+
+    <circle cx="242" cy="896" r="30" fill="none" stroke="#b85c4b" stroke-width="6"/>
+    <text x="230" y="908" fill="#22201d" font-size="34" font-weight="700">3</text>
+    <text x="304" y="880" fill="#22201d" font-size="40" font-weight="700">入れない言葉</text>
+    <text x="304" y="932" fill="#6e665d" font-size="30">みなさん / 曖昧表現 / 技術用語だらけ</text>
+    <path d="M304 944 C420 964, 534 926, 690 944" fill="none" stroke="#30544d" stroke-width="4.5" stroke-linecap="round" opacity="0.72"/>
+  </g>
+
+  <g transform="rotate(2.6 710 1000)">
+    <rect x="648" y="946" width="244" height="154" rx="14" fill="#f4e1a8"/>
+    <text x="680" y="992" fill="#30544d" font-family="'Segoe Print', 'Comic Sans MS', cursive" font-size="24">check</text>
+    <text x="680" y="1032" fill="#22201d" font-family="'Yu Gothic', sans-serif" font-size="24">1行目だけ読んで、</text>
+    <text x="680" y="1066" fill="#22201d" font-family="'Yu Gothic', sans-serif" font-size="24">誰向けか分かる?</text>
+  </g>
+
+  <path d="M648 1010 C600 990, 562 968, 510 920" fill="none" stroke="#b85c4b" stroke-width="5" stroke-linecap="round"/>
+  <text x="534" y="958" fill="#b85c4b" font-family="'Segoe Print', 'Comic Sans MS', cursive" font-size="22" transform="rotate(-12 534 958)">見出しで答える</text>
+
+  <text x="224" y="1192" fill="#8b847a" font-family="Georgia, 'Times New Roman', serif" font-size="23" letter-spacing="3">GAKU AI LIFE / DRAFT BEFORE POST</text>
+  <text x="224" y="1230" fill="#5b554e" font-family="'Yu Gothic', sans-serif" font-size="28">Gaku@趣味でアプリつくるもの</text>
+</svg>

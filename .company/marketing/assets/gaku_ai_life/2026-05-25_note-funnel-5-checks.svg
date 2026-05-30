@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+  <title id="title">note導線 最初に直す5か所</title>
+  <desc id="desc">Threadsからnoteへの導線で見直したい5項目をまとめた保存向けカード</desc>
+  <rect width="1080" height="1350" fill="#f6f1e8"/>
+  <rect x="72" y="72" width="936" height="1206" rx="36" fill="#fffdfa"/>
+  <rect x="72" y="72" width="936" height="24" rx="12" fill="#1f4b43"/>
+
+  <text x="112" y="190" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="58" font-weight="700">note導線</text>
+  <text x="112" y="264" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="58" font-weight="700">最初に直す5か所</text>
+
+  <g fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif">
+    <circle cx="132" cy="392" r="24" fill="#1f4b43"/>
+    <text x="124" y="401" fill="#fffdfa" font-size="26" font-weight="700">1</text>
+    <text x="182" y="404" font-size="38" font-weight="700">プロフで誰向けか言う</text>
+
+    <circle cx="132" cy="526" r="24" fill="#1f4b43"/>
+    <text x="124" y="535" fill="#fffdfa" font-size="26" font-weight="700">2</text>
+    <text x="182" y="538" font-size="38" font-weight="700">固定投稿で無料記事へつなぐ</text>
+
+    <circle cx="132" cy="660" r="24" fill="#1f4b43"/>
+    <text x="124" y="669" fill="#fffdfa" font-size="26" font-weight="700">3</text>
+    <text x="182" y="672" font-size="38" font-weight="700">Threadsは悩み1つだけにする</text>
+
+    <circle cx="132" cy="794" r="24" fill="#1f4b43"/>
+    <text x="124" y="803" fill="#fffdfa" font-size="26" font-weight="700">4</text>
+    <text x="182" y="806" font-size="38" font-weight="700">noteで解決まで渡す</text>
+
+    <circle cx="132" cy="928" r="24" fill="#1f4b43"/>
+    <text x="124" y="937" fill="#fffdfa" font-size="26" font-weight="700">5</text>
+    <text x="182" y="940" font-size="38" font-weight="700">有料は最後に置く</text>
+  </g>
+
+  <rect x="112" y="1032" width="856" height="124" rx="24" fill="#eef4f2"/>
+  <text x="152" y="1104" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="34" font-weight="500">売り込みより先に</text>
+  <text x="152" y="1148" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="34" font-weight="500">無料で信頼を作る設計です</text>
+
+  <text x="112" y="1232" fill="#5a676d" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="28">Gaku@趣味でアプリつくるもの</text>
+</svg>
