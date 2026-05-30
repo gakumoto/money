@@ -27,6 +27,29 @@ export async function getFileContent(path: string): Promise<string | null> {
   }
 }
 
+export async function getRawContent(path: string): Promise<string | null> {
+  try {
+    const metaRes = await fetch(`${API}/repos/${repo()}/contents/${path}`, {
+      headers: headers(),
+      cache: 'no-store',
+    })
+    if (!metaRes.ok) return null
+    const meta = await metaRes.json()
+
+    if (meta.download_url) {
+      const res = await fetch(meta.download_url, { headers: headers(), cache: 'no-store' })
+      if (!res.ok) return null
+      return await res.text()
+    }
+    if (meta.content) {
+      return Buffer.from(meta.content.replace(/\n/g, ''), 'base64').toString('utf-8')
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
 export async function listDir(path: string): Promise<string[]> {
   try {
     const res = await fetch(`${API}/repos/${repo()}/contents/${path}`, {

@@ -1562,6 +1562,22 @@ def main():
     html = generate_html(posts, account, research)
     output_path.write_text(html, encoding="utf-8")
 
+    # Vercel dashboard 用に .company/reports/ にも保存して GitHub push
+    import subprocess as _sp
+    company_report_dir = project_root / ".company" / "reports"
+    company_report_dir.mkdir(parents=True, exist_ok=True)
+    company_report = company_report_dir / f"{account}_report.html"
+    company_report.write_text(html, encoding="utf-8")
+    print(f"✅ dashboard: {company_report}")
+    _sp.run(["git", "add", f".company/reports/{account}_report.html"], cwd=str(project_root), capture_output=True)
+    _r = _sp.run(
+        ["git", "commit", "-m", f"update {account} report ({datetime.now().strftime('%Y-%m-%d %H:%M')})"],
+        cwd=str(project_root), capture_output=True, text=True, encoding="utf-8",
+    )
+    if "nothing to commit" not in (_r.stdout + _r.stderr):
+        _sp.run(["git", "push", "origin", "main"], cwd=str(project_root), capture_output=True)
+        print("✅ GitHub push完了")
+
     max_v = max(p["views"] for p in posts) if posts else 0
     avg_v = sum(p["views"] for p in posts) / len(posts) if posts else 0
     print(f"\n✅ {output_path}")
