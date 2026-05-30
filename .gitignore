@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+scripts/logs/
+
+# Cache
+.cache/
+
+# Claude Code internals
+.claude/
+.agents/
+.company/
