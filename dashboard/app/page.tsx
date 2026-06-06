@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import Link from 'next/link'
 import { getFileContent, listDir } from '@/lib/github'
 
 const DEADLINE = '2026-07-13'
@@ -172,38 +173,40 @@ export default async function Dashboard() {
         </Card>
 
         {/* queue */}
-        <Card title="📦 投稿キュー">
-          <div className="space-y-3">
-            <div className="flex items-center gap-4">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-zinc-100 leading-none">{queued.length}</div>
-                <div className="text-xs text-zinc-500 mt-1">本 待機中</div>
+        <Link href="/queue" className="block">
+          <Card title="📦 投稿キュー" linkHint>
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-zinc-100 leading-none">{queued.length}</div>
+                  <div className="text-xs text-zinc-500 mt-1">本 待機中</div>
+                </div>
+                {staleQueued.length > 0 && (
+                  <div className="flex-1 bg-amber-950/40 border border-amber-900/50 text-amber-400 rounded-lg px-3 py-2 text-sm">
+                    ⚠️ 7日超え: <strong>{staleQueued.length}本</strong> — 要確認
+                  </div>
+                )}
+                {staleQueued.length === 0 && queued.length > 0 && (
+                  <div className="flex-1 bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 rounded-lg px-3 py-2 text-sm">
+                    鮮度OK
+                  </div>
+                )}
               </div>
               {staleQueued.length > 0 && (
-                <div className="flex-1 bg-amber-950/40 border border-amber-900/50 text-amber-400 rounded-lg px-3 py-2 text-sm">
-                  ⚠️ 7日超え: <strong>{staleQueued.length}本</strong> — 要確認
-                </div>
-              )}
-              {staleQueued.length === 0 && queued.length > 0 && (
-                <div className="flex-1 bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 rounded-lg px-3 py-2 text-sm">
-                  鮮度OK
+                <div className="space-y-1">
+                  {staleQueued.slice(0, 4).map((name) => (
+                    <div key={name} className="text-xs text-amber-700 truncate">
+                      {name}
+                    </div>
+                  ))}
+                  {staleQueued.length > 4 && (
+                    <div className="text-xs text-zinc-600">…他{staleQueued.length - 4}本</div>
+                  )}
                 </div>
               )}
             </div>
-            {staleQueued.length > 0 && (
-              <div className="space-y-1">
-                {staleQueued.slice(0, 4).map((name) => (
-                  <div key={name} className="text-xs text-amber-700 truncate">
-                    {name}
-                  </div>
-                ))}
-                {staleQueued.length > 4 && (
-                  <div className="text-xs text-zinc-600">…他{staleQueued.length - 4}本</div>
-                )}
-              </div>
-            )}
-          </div>
-        </Card>
+          </Card>
+        </Link>
 
         {/* report */}
         <Card title="📝 今日の日報">
@@ -239,11 +242,13 @@ function Card({
   children,
   badge,
   badgeColor = 'zinc',
+  linkHint = false,
 }: {
   title: string
   children: ReactNode
   badge?: string
   badgeColor?: 'zinc' | 'amber' | 'emerald'
+  linkHint?: boolean
 }) {
   const badgeStyles: Record<string, string> = {
     zinc: 'bg-zinc-800 text-zinc-400',
@@ -254,11 +259,13 @@ function Card({
     <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold text-zinc-200">{title}</h2>
-        {badge && (
+        {badge ? (
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeStyles[badgeColor]}`}>
             {badge}
           </span>
-        )}
+        ) : linkHint ? (
+          <span className="text-xs text-zinc-600">一覧 →</span>
+        ) : null}
       </div>
       {children}
     </div>

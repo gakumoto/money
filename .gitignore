@@ -31,3 +31,6 @@ scripts/logs/
 # Dashboard build artifacts
 dashboard/.next/
 dashboard/node_modules/
+dashboard/next-env.d.ts
+dashboard/tsconfig.tsbuildinfo
+dashboard/package-lock.json
