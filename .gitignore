@@ -34,3 +34,12 @@ dashboard/node_modules/
 dashboard/next-env.d.ts
 dashboard/tsconfig.tsbuildinfo
 dashboard/package-lock.json
+
+# Obsidian per-user state (config 3 files は共有する)
+.obsidian/workspace.json
+.obsidian/workspaces.json
+.obsidian/graph.json
+.obsidian/cache/
+.obsidian/community-plugins.json
+.obsidian/plugins/
+.obsidian/hotkeys.json

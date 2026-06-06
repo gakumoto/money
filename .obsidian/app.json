@@ -1,0 +1,23 @@
+{
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "showLineNumber": true,
+  "readableLineLength": false,
+  "showUnsupportedFiles": false,
+  "attachmentFolderPath": ".company/reading/attachments",
+  "newFileFolderPath": ".company/reading",
+  "newFileLocation": "folder",
+  "promptDelete": true,
+  "userIgnoreFilters": [
+    "^scripts/",
+    "^dashboard/",
+    "^\\.venv/",
+    "^\\.next/",
+    "^node_modules/",
+    "^Threads\\d+\\.md$",
+    "^BLUEPRINT\\.md$",
+    "package-lock\\.json",
+    "^\\.gitignore$"
+  ]
+}
