@@ -66,3 +66,55 @@ export async function listDir(path: string): Promise<string[]> {
     return []
   }
 }
+
+export interface FileWithSha {
+  content: string
+  sha: string
+}
+
+export async function getFileWithSha(path: string): Promise<FileWithSha | null> {
+  const res = await fetch(`${API}/repos/${repo()}/contents/${path}`, {
+    headers: headers(),
+    cache: 'no-store',
+  })
+  if (!res.ok) return null
+  const json = await res.json()
+  if (json.type !== 'file' || !json.content) return null
+  const content = Buffer.from(json.content.replace(/\n/g, ''), 'base64').toString('utf-8')
+  return { content, sha: json.sha as string }
+}
+
+export async function putFile(
+  path: string,
+  content: string,
+  message: string,
+): Promise<{ ok: boolean; status: number; error?: string }> {
+  const res = await fetch(`${API}/repos/${repo()}/contents/${path}`, {
+    method: 'PUT',
+    headers: { ...headers(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message,
+      content: Buffer.from(content, 'utf-8').toString('base64'),
+    }),
+    cache: 'no-store',
+  })
+  if (res.ok) return { ok: true, status: res.status }
+  const text = await res.text().catch(() => '')
+  return { ok: false, status: res.status, error: text.slice(0, 300) }
+}
+
+export async function deleteFile(
+  path: string,
+  sha: string,
+  message: string,
+): Promise<{ ok: boolean; status: number; error?: string }> {
+  const res = await fetch(`${API}/repos/${repo()}/contents/${path}`, {
+    method: 'DELETE',
+    headers: { ...headers(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, sha }),
+    cache: 'no-store',
+  })
+  if (res.ok) return { ok: true, status: res.status }
+  const text = await res.text().catch(() => '')
+  return { ok: false, status: res.status, error: text.slice(0, 300) }
+}
