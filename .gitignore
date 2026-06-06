@@ -43,3 +43,6 @@ dashboard/package-lock.json
 .obsidian/community-plugins.json
 .obsidian/plugins/
 .obsidian/hotkeys.json
+
+# reading/ は独立リポ (gakumoto/gaku-reading) として運用 — iPhone Obsidian と同期
+.company/reading/
