@@ -20,14 +20,21 @@ if (-not (Test-Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 }
 
-# .env から PYTHON_EXE を読む。無ければ "python" にフォールバック
-$envFile = Join-Path $scriptDir ".env"
-$pythonExe = "python"
-if (Test-Path $envFile) {
-    $line = Select-String -Path $envFile -Pattern "^PYTHON_EXE=" -Encoding UTF8 | Select-Object -First 1
-    if ($line) {
-        $pythonExe = ($line.Line -replace "^PYTHON_EXE=", "").Trim()
+# Python 解決: repo の venv を最優先。
+# （タスク経由の非対話 PowerShell + 日本語パスでは .env の Select-String 読取りが
+#   失敗し "python"=Microsoft Store スタブにフォールバック→無言で何もせず終了する事故があったため、
+#   .env に依存せず venv の python を直接使う）
+$pythonExe = $null
+$venvPy = Join-Path $projectRoot ".venv\Scripts\python.exe"
+if (Test-Path $venvPy) {
+    $pythonExe = $venvPy
+} else {
+    $envFile = Join-Path $scriptDir ".env"
+    if (Test-Path $envFile) {
+        $line = Select-String -Path $envFile -Pattern "^PYTHON_EXE=" -Encoding UTF8 | Select-Object -First 1
+        if ($line) { $pythonExe = ($line.Line -replace "^PYTHON_EXE=", "").Trim().Trim('"') }
     }
+    if (-not $pythonExe) { $pythonExe = "python" }
 }
 
 $scriptPath = Join-Path $scriptDir $Script

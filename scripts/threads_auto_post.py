@@ -53,9 +53,11 @@ def parse_draft(path: Path) -> dict:
         k, v = line.split(":", 1)
         fm[k.strip()] = v.strip().strip('"').strip("'")
 
-    # 本文抽出: 【本文】 〜 (【コメント欄】 or EOF)
+    # 本文抽出: 【本文】 〜 (【コメント欄】 / 【補足...】 等のメタ見出し or EOF)
+    # ★2026-06-14: 生成スキルが【補足/分析】を本文の後ろに付けるため境界に含める。
+    #   含めないと内部メモごと投稿される事故になる（6/16-17分の queued で検出）。
     body_match = re.search(
-        r"【本文】\s*\n(.*?)(?=\n【コメント欄】|\Z)", body, re.DOTALL
+        r"【本文】\s*\n(.*?)(?=\n【コメント欄】|\n【補足|\Z)", body, re.DOTALL
     )
     main_text = body_match.group(1).strip() if body_match else body.strip()
 

@@ -161,6 +161,35 @@ def main():
         except Exception as e:
             print(f"[fetch_metrics] m2f 連動失敗: {e}", file=sys.stderr)
 
+        # メトリクスを INDEX に紐付け（型×ジャンル別の効き目集計が更新される）
+        try:
+            import subprocess
+
+            sync_result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT_DIR / "sync_metrics_to_research_index.py"),
+                    "--account",
+                    account,
+                ],
+                cwd=PROJECT_ROOT,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=120,
+            )
+            if sync_result.returncode == 0:
+                print(f"[fetch_metrics] sync_metrics_to_research_index ok\n{sync_result.stdout.strip()}")
+            else:
+                print(
+                    f"[fetch_metrics] sync_metrics_to_research_index failed: "
+                    f"exit={sync_result.returncode}\n{sync_result.stderr.strip()}",
+                    file=sys.stderr,
+                )
+        except Exception as e:
+            print(f"[fetch_metrics] sync_metrics_to_research_index 連動失敗: {e}", file=sys.stderr)
+
 
 if __name__ == "__main__":
     main()

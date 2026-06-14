@@ -30,6 +30,13 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 load_dotenv(SCRIPT_DIR / ".env")
 PROJECT_ROOT = SCRIPT_DIR.parent
 
+# queued/ にこの本数以上たまっていたら、その夜の生成をスキップする（バックログ防止）。
+# 2026-06-14: 1日15本配信(朝4/昼3/夕4/夜1/深夜3)に増枠したため上限も引き上げ。
+# 消費は約15本/日。24にしておくと生成後でも最大 ~39本（約2.6日分）まで許容し、
+# PC が 1〜2 晩落ちても枯れず、かつ溜まりすぎて鮮度が崩れない範囲に収める。
+# .env の THREADS_MAX_QUEUE で上書き可。
+MAX_QUEUE = int(os.getenv("THREADS_MAX_QUEUE", "24"))
+
 # Discord 通知ヘルパーをインポート
 sys.path.insert(0, str(SCRIPT_DIR))
 from _discord import notify  # noqa: E402
@@ -115,6 +122,18 @@ def count_drafts_for(account: str, date: dt.date) -> int:
     return sum(1 for f in drafts_dir.rglob(f"{prefix}_*.md"))
 
 
+def count_queued(accounts: list[str]) -> int:
+    """アクティブアカウントの queued/ にある未投稿下書きの合計本数."""
+    total = 0
+    for account in accounts:
+        qdir = (
+            PROJECT_ROOT / ".company" / "marketing" / "drafts" / account / "queued"
+        )
+        if qdir.exists():
+            total += sum(1 for _ in qdir.glob("*.md"))
+    return total
+
+
 def find_active_accounts() -> list[str]:
     """marketing/accounts/ から status: active のアカウントを抽出."""
     acc_dir = PROJECT_ROOT / ".company" / "marketing" / "accounts"
@@ -131,9 +150,45 @@ def find_active_accounts() -> list[str]:
     return active
 
 
+def rebuild_research_index() -> tuple[bool, str]:
+    """build_research_index.py を実行して index.json を最新化."""
+    builder = SCRIPT_DIR / "build_research_index.py"
+    try:
+        result = subprocess.run(
+            [sys.executable, str(builder)],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=120,
+        )
+        out = (result.stdout or "").strip()
+        if result.returncode != 0:
+            return False, f"exit={result.returncode}\n{result.stderr[:500]}"
+        return True, out
+    except subprocess.TimeoutExpired:
+        return False, "タイムアウト (120秒)"
+
+
 def main():
     started = dt.datetime.now()
     print(f"[nightly_pipeline] 開始: {started.isoformat(timespec='seconds')}")
+
+    # --- バックログ防止ゲート（2026-06-14 D-049）---
+    # queued がすでに十分あるなら、その夜の生成をまるごとスキップする。
+    # 生成を消費(約10本/日)に合わせ、青天井に溜まって「5日遅れ」になるのを防ぐ。
+    accounts_now = find_active_accounts()
+    queued_now = count_queued(accounts_now)
+    if queued_now >= MAX_QUEUE:
+        msg = (
+            f"[myCompany] 夜パイプライン: queued {queued_now}本 "
+            f"(上限{MAX_QUEUE}) のため今夜の生成はスキップ。"
+            "バックログ防止のため在庫が減るまで作りません。"
+        )
+        print(f"[nightly_pipeline] スキップ: {msg}")
+        notify(msg)
+        sys.exit(0)
 
     # スリープ復帰直後の DNS 不安定対策: ネット復帰まで最大3分待つ
     # 02:00 起動時に Wi-Fi が再接続できていないケースを救済
@@ -144,6 +199,10 @@ def main():
         sys.exit(1)
 
     notify(f"[myCompany] 夜のパイプライン開始: {started.strftime('%H:%M')}")
+
+    # 下書き生成の前に index.json を最新化（threads-daily-run がネタ選びに使う）
+    idx_ok, idx_log = rebuild_research_index()
+    print(f"[nightly_pipeline] index rebuild: {'ok' if idx_ok else 'NG'}\n{idx_log}")
 
     ok, log = run_threads_daily_run()
 

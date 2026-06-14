@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+  <title id="title">上位6本で共通 先に配ってた3つ</title>
+  <desc id="desc">note上位記事を調べて見えた3つの共通パターンを、手帳ラフ風にまとめた保存画像</desc>
+  <defs>
+    <pattern id="linegrid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M0 24 H30" stroke="#ddd4c7" stroke-width="1"/>
+    </pattern>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#8b847a" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1350" fill="#f5f0e6"/>
+  <rect width="1080" height="1350" fill="url(#linegrid)" opacity="0.55"/>
+
+  <g transform="rotate(-2.4 540 675)" filter="url(#softShadow)">
+    <rect x="106" y="102" width="868" height="1142" rx="28" fill="#fffaf2"/>
+  </g>
+
+  <g transform="rotate(-6 180 128)">
+    <rect x="102" y="94" width="180" height="42" rx="8" fill="#d8c39f"/>
+  </g>
+  <g transform="rotate(4.5 876 124)">
+    <rect x="814" y="92" width="154" height="40" rx="8" fill="#d8c39f"/>
+  </g>
+
+  <text x="148" y="178" fill="#8b847a" font-family="Georgia, 'Times New Roman', serif" font-size="24" letter-spacing="3">NOTE RESEARCH / SAVE POST</text>
+  <text x="148" y="254" fill="#22201d" font-family="'Yu Gothic', 'Hiragino Sans', sans-serif" font-size="60" font-weight="700">上位6本で共通</text>
+  <text x="148" y="326" fill="#22201d" font-family="'Yu Gothic', 'Hiragino Sans', sans-serif" font-size="60" font-weight="700">先に配ってた3つ</text>
+
+  <path d="M148 346 C300 364, 478 318, 676 342" fill="none" stroke="#30544d" stroke-width="8" stroke-linecap="round" opacity="0.86"/>
+  <text x="714" y="352" fill="#30544d" font-family="'Yu Gothic', sans-serif" font-size="24" font-weight="700" transform="rotate(5 714 352)">長文の前に渡す</text>
+
+  <g fill="#22201d" font-family="'Yu Gothic', 'Hiragino Sans', sans-serif">
+    <circle cx="188" cy="480" r="34" fill="none" stroke="#b85c4b" stroke-width="6"/>
+    <text x="176" y="493" font-size="34" font-weight="700">1</text>
+    <text x="246" y="462" font-size="40" font-weight="700">コピペできる素材</text>
+    <text x="246" y="512" font-size="30" fill="#6e665d">プロンプト / テンプレ / 例文</text>
+
+    <circle cx="188" cy="692" r="34" fill="none" stroke="#b85c4b" stroke-width="6"/>
+    <text x="176" y="705" font-size="34" font-weight="700">2</text>
+    <text x="246" y="674" font-size="40" font-weight="700">すぐやれる手順</text>
+    <text x="246" y="724" font-size="30" fill="#6e665d">3ステップ / 4項目 / 流れ</text>
+
+    <circle cx="188" cy="904" r="34" fill="none" stroke="#b85c4b" stroke-width="6"/>
+    <text x="176" y="917" font-size="34" font-weight="700">3</text>
+    <text x="246" y="886" font-size="40" font-weight="700">数字で見える結果</text>
+    <text x="246" y="936" font-size="30" fill="#6e665d">スキ / 期間 / 実例</text>
+  </g>
+
+  <g transform="rotate(2.4 700 1044)">
+    <rect x="642" y="994" width="248" height="144" rx="14" fill="#f4e1a8"/>
+    <text x="674" y="1042" fill="#30544d" font-family="'Yu Gothic', sans-serif" font-size="24" font-weight="700">CHECK</text>
+    <text x="674" y="1082" fill="#22201d" font-family="'Yu Gothic', sans-serif" font-size="24">画像1枚目で</text>
+    <text x="674" y="1116" fill="#22201d" font-family="'Yu Gothic', sans-serif" font-size="24">配る物が見える?</text>
+  </g>
+
+  <path d="M246 972 C396 998, 552 972, 782 984" fill="none" stroke="#b85c4b" stroke-width="6" stroke-linecap="round" opacity="0.78"/>
+
+  <text x="148" y="1198" fill="#8b847a" font-family="Georgia, 'Times New Roman', serif" font-size="24" letter-spacing="3">GAKU AI LIFE / NOTE TO THREADS</text>
+  <text x="148" y="1236" fill="#5b554e" font-family="'Yu Gothic', sans-serif" font-size="28">Gaku@趣味でアプリつくるもの</text>
+</svg>

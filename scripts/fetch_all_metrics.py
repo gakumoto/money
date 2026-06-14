@@ -480,11 +480,11 @@ def parse_buzz_references(project_root: Path) -> list[dict]:
     """バズ投稿リファレンスファイルを解析して各投稿を構造化して返す."""
     import re
     topics_dir = project_root / ".company" / "research" / "topics"
-    files = sorted(topics_dir.glob("*-buzz-references.md"), reverse=True)
+    files = sorted(topics_dir.glob("*-buzz-references.md"))
     if not files:
         return []
 
-    text = files[0].read_text(encoding="utf-8", errors="replace")
+    text = "\n\n---\n\n".join(f.read_text(encoding="utf-8", errors="replace") for f in files)
     blocks = re.split(r'\n(?=## \d+\. )', text)
     items = []
 
@@ -762,13 +762,13 @@ def generate_html(posts: list[dict], account: str, research: dict | None = None)
   </td>
   <td style="padding:10px 8px;text-align:right;">
     <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-      <div style="width:{bar}px;height:6px;background:#4ade80;border-radius:3px;opacity:0.7;"></div>
+      <div class="hide-mobile" style="width:{bar}px;height:6px;background:#4ade80;border-radius:3px;opacity:0.7;"></div>
       <span style="color:#4ade80;font-weight:bold;font-size:15px;">{p["views"]:,}</span>
     </div>
   </td>
   <td style="padding:10px 8px;text-align:right;color:#f472b6;">{p["likes"]}</td>
-  <td style="padding:10px 8px;text-align:right;color:#a78bfa;">{p["replies"]}</td>
-  <td style="padding:10px 8px;text-align:right;color:#fbbf24;font-size:12px;">{lr}</td>
+  <td class="hide-mobile" style="padding:10px 8px;text-align:right;color:#a78bfa;">{p["replies"]}</td>
+  <td class="hide-mobile" style="padding:10px 8px;text-align:right;color:#fbbf24;font-size:12px;">{lr}</td>
 </tr>"""
 
     # ワースト10テーブル
@@ -837,14 +837,21 @@ def generate_html(posts: list[dict], account: str, research: dict | None = None)
 
     research_section_html = f"""
 <style>
-.rfilter{{background:transparent;border:1px solid #334155;color:#64748b;border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all .15s;}}
+.rfilter{{background:transparent;border:1px solid #334155;color:#64748b;border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;}}
 .rfilter:hover{{background:#1e293b;}}
 .rfilter.active{{background:#1e293b;font-weight:600;}}
 .rcard.hidden{{display:none;}}
-.rcards-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}}
+.rfilter-wrap{{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}}
+.rcards-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:16px;}}
+.buzz-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:16px;margin-bottom:24px;}}
+@media(max-width:700px){{
+  .rfilter-wrap{{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;padding-bottom:4px;}}
+  .rfilter-wrap::-webkit-scrollbar{{display:none;}}
+  .rcards-grid,.buzz-grid{{grid-template-columns:1fr;}}
+}}
 </style>
 <h2 style="font-size:18px;font-weight:700;margin:32px 0 16px;color:#e2e8f0;border-left:3px solid #60a5fa;padding-left:12px;">リサーチ DB（カテゴリ別）<span style="font-size:13px;color:#64748b;font-weight:400;margin-left:12px;">{len(research_items)}件収集 / 即投稿推奨 {_urgent_count}件</span></h2>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">{_filter_btns}</div>
+<div class="rfilter-wrap">{_filter_btns}</div>
 <div class="rcards-grid">{_cards_html}</div>
 <script>
 function filterCat(cat) {{
@@ -860,38 +867,188 @@ function filterCat(cat) {{
 
     # バズ参考カード
     buzz_items = parse_buzz_references(SCRIPT_DIR.parent)
+
+    # プラットフォーム・ジャンル分類
+    import re as _bre
+    for _it in buzz_items:
+        _u = _it.get('url', '')
+        _it['platform'] = 'note' if ('note.com' in _u or 'moonsh.jp' in _u) else 'threads'
+        _h = _it['header'].lower()
+        if 'chatgpt' in _h:
+            _it['bgenre'] = 'ChatGPT'
+        elif 'claudecode' in _h or 'claude code' in _h:
+            _it['bgenre'] = 'ClaudeCode'
+        elif 'claude' in _h or 'ai' in _h:
+            _it['bgenre'] = 'AI/Claude'
+        elif 'sns' in _h:
+            _it['bgenre'] = 'SNS集客'
+        elif 'フリーランス' in _h:
+            _it['bgenre'] = 'フリーランス'
+        elif '収益化' in _h:
+            _it['bgenre'] = 'note収益化'
+        elif 'note運用' in _h:
+            _it['bgenre'] = 'note運用'
+        elif '副業' in _h:
+            _it['bgenre'] = '副業'
+        elif 'threads' in _h:
+            _it['bgenre'] = 'Threads運用'
+        else:
+            _it['bgenre'] = 'その他'
+        _mv = _bre.search(r'(?:いいね|スキ)([\d,]+)', _it['stats'])
+        _it['max_val'] = int(_mv.group(1).replace(',', '')) if _mv else 0
+        _it['metric'] = 'スキ' if _it['platform'] == 'note' else 'いいね'
+
+    # ジャンル別最高値サマリー
+    from collections import defaultdict as _bdd
+    _genre_best = _bdd(lambda: {'max_val': 0, 'account': '', 'metric': '', 'platform': ''})
+    for _it in buzz_items:
+        _g = _it['bgenre']
+        if _it['max_val'] > _genre_best[_g]['max_val']:
+            _genre_best[_g] = {'max_val': _it['max_val'], 'account': _it['account'],
+                                'metric': _it['metric'], 'platform': _it['platform']}
+
+    _summary_rows = ""
+    _genre_icon = {'note': '📝', 'threads': '🧵'}
+    for _g, _d in sorted(_genre_best.items(), key=lambda x: x[1]['max_val'], reverse=True):
+        _pt_badge_color = "#60a5fa" if _d['platform'] == 'threads' else "#4ade80"
+        _pt_label = "Threads" if _d['platform'] == 'threads' else "note"
+        _summary_rows += (
+            f'<tr style="border-bottom:1px solid #0f172a;">'
+            f'<td style="padding:7px 10px;font-size:12px;color:#e2e8f0;">{_g}</td>'
+            f'<td style="padding:7px 10px;font-size:12px;color:#fbbf24;font-weight:700;text-align:right;white-space:nowrap;">'
+            f'{_d["max_val"]:,} {_d["metric"]}</td>'
+            f'<td style="padding:7px 10px;font-size:11px;color:#94a3b8;">@{_d["account"]}</td>'
+            f'<td style="padding:7px 10px;text-align:center;">'
+            f'<span style="font-size:10px;background:{_pt_badge_color}22;color:{_pt_badge_color};'
+            f'border-radius:4px;padding:1px 6px;">{_pt_label}</span></td>'
+            f'</tr>'
+        )
+
+    _summary_html = (
+        f'<div style="background:#1e293b;border-radius:10px;padding:16px;margin-bottom:20px;">'
+        f'<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:10px;">ジャンル別 最高スコア一覧</div>'
+        f'<div style="overflow-x:auto;">'
+        f'<table style="width:100%;border-collapse:collapse;min-width:320px;">'
+        f'<thead><tr style="border-bottom:1px solid #334155;">'
+        f'<th style="padding:4px 10px;font-size:10px;color:#64748b;text-align:left;">ジャンル</th>'
+        f'<th style="padding:4px 10px;font-size:10px;color:#64748b;text-align:right;">最高値</th>'
+        f'<th style="padding:4px 10px;font-size:10px;color:#64748b;text-align:left;">代表アカウント</th>'
+        f'<th style="padding:4px 10px;font-size:10px;color:#64748b;text-align:center;">Pt</th>'
+        f'</tr></thead>'
+        f'<tbody>{_summary_rows}</tbody>'
+        f'</table></div></div>'
+    ) if buzz_items else ""
+
+    # プラットフォーム × ジャンル フィルターボタン
+    _t_count = sum(1 for i in buzz_items if i['platform'] == 'threads')
+    _n_count = sum(1 for i in buzz_items if i['platform'] == 'note')
+    _buzz_filters = (
+        f'<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">'
+        f'<span style="font-size:10px;color:#64748b;flex-shrink:0;">プラットフォーム:</span>'
+        f'<button onclick="filterBuzz(\'all\')" class="bzfilter active" data-bplat="all">全て（{len(buzz_items)}）</button>'
+        f'<button onclick="filterBuzz(\'threads\')" class="bzfilter" data-bplat="threads">Threads（{_t_count}）</button>'
+        f'<button onclick="filterBuzz(\'note\')" class="bzfilter" data-bplat="note">note（{_n_count}）</button>'
+        f'</div>'
+    ) if buzz_items else ""
+
     _buzz_cards = ""
     for it in buzz_items:
         star_str = "★" * it["stars"] if it["stars"] else ""
         star_color = "#fbbf24" if it["stars"] >= 3 else "#a78bfa" if it["stars"] >= 2 else "#64748b"
-        # ボディは80文字で切る
-        body_short = it["body"][:160] + ("…" if len(it["body"]) > 160 else "")
         url_link = f'<a href="{it["url"]}" target="_blank" style="color:#475569;font-size:10px;text-decoration:none;">↗ 元投稿を見る</a>' if it["url"] else ""
-        insight_short = it["insight"][:200] + ("…" if len(it["insight"]) > 200 else "")
+        _pt_color = "#60a5fa" if it["platform"] == "threads" else "#4ade80"
+        _pt_label = "Threads" if it["platform"] == "threads" else "note"
+        _genre_badge = (
+            f'<span style="font-size:10px;background:{_pt_color}22;color:{_pt_color};'
+            f'border-radius:4px;padding:1px 6px;margin-left:4px;">{_pt_label}</span>'
+            f'<span style="font-size:10px;color:#475569;border-radius:4px;padding:1px 6px;">{it["bgenre"]}</span>'
+        )
+
+        # ボディ: URLリスト型（3件以上）はクリック可能リストに、それ以外は通常テキスト
+        body = it["body"]
+        body_lines = [l.strip() for l in body.split('\n') if l.strip()]
+        URL_PREFIXES = ['https://www.threads.com', 'https://note.com', 'https://moonsh.jp']
+        url_lines = [l for l in body_lines if any(p in l for p in URL_PREFIXES)]
+        if len(url_lines) >= 3:
+            link_items = ""
+            for line in body_lines:
+                matched_prefix = next((p for p in URL_PREFIXES if p in line), None)
+                if matched_prefix:
+                    parts = line.split(matched_prefix, 1)
+                    href = matched_prefix + parts[1].split()[0]
+                    label = parts[0].strip()
+                    link_items += (
+                        f'<div style="display:flex;align-items:center;gap:6px;'
+                        f'padding:4px 0;border-bottom:1px solid #1e293b;">'
+                        f'<span style="font-size:11px;color:#94a3b8;flex:1;">{label}</span>'
+                        f'<a href="{href}" target="_blank" style="color:#60a5fa;font-size:14px;'
+                        f'flex-shrink:0;text-decoration:none;">↗</a></div>'
+                    )
+            body_html = (
+                f'<div style="background:#0f172a;border-radius:6px;padding:8px 10px;'
+                f'margin-bottom:10px;max-height:240px;overflow-y:auto;">{link_items}</div>'
+            )
+        else:
+            body_short = body[:400] + ("…" if len(body) > 400 else "")
+            body_html = (
+                f'<div style="font-size:12px;color:#cbd5e1;line-height:1.6;margin-bottom:10px;'
+                f'border-left:2px solid #334155;padding-left:10px;font-style:italic;">{body_short}</div>'
+            )
+
         _buzz_cards += (
-            f'<div style="background:#1e293b;border-radius:10px;padding:16px;border-top:2px solid {star_color};">'
+            f'<div class="bzcard" data-bplat="{it["platform"]}" data-bgenre="{it["bgenre"]}" '
+            f'style="background:#1e293b;border-radius:10px;padding:16px;border-top:2px solid {star_color};">'
             f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">'
             f'<span style="font-size:14px;font-weight:700;color:#e2e8f0;">@{it["account"]}</span>'
             f'<span style="color:{star_color};font-size:11px;">{star_str}</span>'
+            f'{_genre_badge}'
             f'<span style="color:#64748b;font-size:10px;margin-left:auto;">{it["date"]}</span>'
             f'</div>'
             f'<div style="background:#0f172a;border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:11px;color:#a78bfa;font-weight:600;">{it["stats"]}</div>'
-            f'<div style="font-size:12px;color:#cbd5e1;line-height:1.6;margin-bottom:10px;border-left:2px solid #334155;padding-left:10px;font-style:italic;">{body_short}</div>'
+            f'{body_html}'
             f'<div style="background:#0f172a;border-radius:6px;padding:8px 10px;margin-bottom:8px;">'
             f'<div style="font-size:10px;color:#64748b;margin-bottom:3px;">型</div>'
             f'<div style="font-size:11px;color:#60a5fa;line-height:1.5;">{it["pattern"]}</div>'
             f'</div>'
             f'<div style="background:#0f172a;border-radius:6px;padding:8px 10px;border-left:2px solid #4ade80;">'
             f'<div style="font-size:10px;color:#64748b;margin-bottom:3px;">自分への示唆</div>'
-            f'<div style="font-size:11px;color:#cbd5e1;line-height:1.6;">{insight_short}</div>'
+            f'<div style="font-size:11px;color:#cbd5e1;line-height:1.6;">{it["insight"]}</div>'
             f'</div>'
             f'<div style="margin-top:8px;">{url_link}</div>'
             f'</div>'
         )
 
     buzz_section_html = f"""
-<h2 style="font-size:18px;font-weight:700;margin:32px 0 16px;color:#e2e8f0;border-left:3px solid #fbbf24;padding-left:12px;">バズ投稿リファレンス（学習素材）<span style="font-size:13px;color:#64748b;font-weight:400;margin-left:12px;">{len(buzz_items)}本収集 / Phase 2 ルーチンの根拠</span></h2>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:24px;">{_buzz_cards}</div>
+<style>
+.bzfilter{{background:transparent;border:1px solid #334155;color:#64748b;border-radius:20px;
+  padding:5px 14px;font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;}}
+.bzfilter:hover{{background:#1e293b;}}
+.bzfilter.active{{background:#1e293b;font-weight:700;color:#e2e8f0;border-color:#60a5fa;}}
+.bzcard.bz-hidden{{display:none;}}
+@media(max-width:700px){{
+  .bzfilter-row{{overflow-x:auto;flex-wrap:nowrap!important;scrollbar-width:none;padding-bottom:4px;}}
+  .bzfilter-row::-webkit-scrollbar{{display:none;}}
+}}
+</style>
+<h2 style="font-size:18px;font-weight:700;margin:32px 0 16px;color:#e2e8f0;border-left:3px solid #fbbf24;padding-left:12px;">バズ投稿リファレンス（学習素材）<span style="font-size:13px;color:#64748b;font-weight:400;margin-left:12px;">{len(buzz_items)}本収集</span></h2>
+{_summary_html}
+<div class="bzfilter-row" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;">
+  <span style="font-size:10px;color:#64748b;flex-shrink:0;">絞り込み:</span>
+  <button onclick="filterBuzz('all')" class="bzfilter active" data-bplat="all">全て（{len(buzz_items)}）</button>
+  <button onclick="filterBuzz('threads')" class="bzfilter" data-bplat="threads">🧵 Threads（{_t_count}）</button>
+  <button onclick="filterBuzz('note')" class="bzfilter" data-bplat="note">📝 note（{_n_count}）</button>
+</div>
+<div class="buzz-grid">{_buzz_cards}</div>
+<script>
+function filterBuzz(plat) {{
+  document.querySelectorAll('.bzcard').forEach(el => {{
+    el.classList.toggle('bz-hidden', plat !== 'all' && el.dataset.bplat !== plat);
+  }});
+  document.querySelectorAll('.bzfilter').forEach(btn => {{
+    btn.classList.toggle('active', btn.dataset.bplat === plat);
+  }});
+}}
+</script>
 """ if buzz_items else ""
 
     note_article_html = parse_note_article(SCRIPT_DIR.parent)
@@ -935,12 +1092,30 @@ function filterCat(cat) {{
   .action-num{{font-size:28px;font-weight:700;margin-bottom:8px;}}
   .action-title{{font-size:14px;font-weight:600;margin-bottom:8px;}}
   .action-body{{font-size:12px;color:#94a3b8;line-height:1.7;}}
-  @media(max-width:700px){{.card-row,.action-grid{{grid-template-columns:1fr;}}}}
-  .tab-nav{{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 24px;border-bottom:1px solid #334155;padding-bottom:0;}}
-  .tab-btn{{background:transparent;border:none;border-bottom:3px solid transparent;color:#64748b;font-size:13px;font-weight:600;padding:10px 18px;cursor:pointer;transition:all .15s;white-space:nowrap;margin-bottom:-1px;}}
+  .section{{overflow-x:auto;-webkit-overflow-scrolling:touch;}}
+  @media(max-width:700px){{
+    body{{padding:12px;}}
+    h1{{font-size:18px;}}
+    .sub{{font-size:12px;margin-bottom:16px;}}
+    .kpi{{padding:12px 14px;}}
+    .kpi-value{{font-size:22px;}}
+    .kpi-label{{font-size:10px;}}
+    .section{{padding:14px;}}
+    .card-row,.action-grid{{grid-template-columns:1fr;}}
+    .insight-card,.action-card{{padding:14px;}}
+    .action-num{{font-size:22px;}}
+    .action-title{{font-size:13px;}}
+    .hide-mobile{{display:none!important;}}
+    table thead th,table tbody td{{padding:5px 4px!important;font-size:11px!important;}}
+    table tbody td div{{font-size:11px!important;}}
+    table tbody td span{{font-size:10px!important;}}
+  }}
+  .tab-nav{{position:sticky;top:0;z-index:100;background:#0f172a;display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:20px 0 0;border-bottom:1px solid #334155;}}
+  .tab-nav::-webkit-scrollbar{{display:none;}}
+  .tab-btn{{background:transparent;border:none;border-bottom:3px solid transparent;color:#64748b;font-size:13px;font-weight:600;padding:10px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;margin-bottom:-1px;flex-shrink:0;}}
   .tab-btn:hover{{color:#cbd5e1;}}
   .tab-btn.active{{color:#e2e8f0;border-bottom-color:#60a5fa;}}
-  .tab-pane{{display:none;}}
+  .tab-pane{{display:none;padding-top:20px;}}
   .tab-pane.active{{display:block;}}
 </style>
 </head>
@@ -1090,8 +1265,8 @@ function filterCat(cat) {{
       <th>本文</th>
       <th style="text-align:right;">Views</th>
       <th style="text-align:right;">Likes</th>
-      <th style="text-align:right;">返信</th>
-      <th style="text-align:right;">いいね率</th>
+      <th class="hide-mobile" style="text-align:right;">返信</th>
+      <th class="hide-mobile" style="text-align:right;">いいね率</th>
     </tr></thead>
     <tbody>{top15_rows}</tbody>
   </table>
@@ -1241,7 +1416,7 @@ function filterCat(cat) {{
 <!-- Threadsアルゴリズム攻略メモ -->
 <div class="section" style="margin-bottom:20px;">
   <h2>Threadsアルゴリズム攻略メモ（リサーチ済み・公式出典）</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+  <div class="card-row" style="gap:14px;">
     <div>
       <div style="font-size:12px;color:#4ade80;margin-bottom:12px;font-weight:600;text-transform:uppercase;">やるべきこと</div>
       <div class="insight-item"><div class="dot" style="background:#4ade80;"></div>投稿後<strong style="color:#4ade80;">30〜60分</strong>はリプ返しに集中（Stage1評価が決まる）</div>
@@ -1342,6 +1517,12 @@ function switchNote(idx) {{
   document.querySelectorAll('.note-btn').forEach((b, i) => {{
     b.classList.toggle('note-btn-active', i === idx);
   }});
+}}
+
+// モバイルではアスペクト比をより正方形に近づけてグラフを見やすくする
+if (window.innerWidth < 700) {{
+  Chart.defaults.aspectRatio = 1.2;
+  Chart.defaults.maintainAspectRatio = true;
 }}
 
 // 日次投稿数

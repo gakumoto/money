@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+  <title id="title">AI記事タイトル 先に入れる4要素</title>
+  <desc id="desc">AI記事タイトルを作る前に確認したい4要素を、保存向けカードとして整理した画像</desc>
+  <rect width="1080" height="1350" fill="#f6f1e8"/>
+  <rect x="74" y="72" width="932" height="1208" rx="34" fill="#fffdfa"/>
+  <rect x="74" y="72" width="932" height="22" rx="11" fill="#30544d"/>
+
+  <text x="116" y="190" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="56" font-weight="700">AI記事タイトル</text>
+  <text x="116" y="262" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="56" font-weight="700">先に入れる4要素</text>
+
+  <g font-family="Noto Sans JP, Yu Gothic, sans-serif">
+    <rect x="116" y="346" width="844" height="150" rx="28" fill="#eef4f2"/>
+    <circle cx="164" cy="420" r="28" fill="#30544d"/>
+    <text x="155" y="430" fill="#fffdfa" font-size="30" font-weight="700">1</text>
+    <text x="218" y="408" fill="#1f2a30" font-size="38" font-weight="700">ツール名</text>
+    <text x="218" y="456" fill="#5d696f" font-size="28">Claude / ChatGPT / Gemini</text>
+
+    <rect x="116" y="536" width="844" height="150" rx="28" fill="#fff6ee"/>
+    <circle cx="164" cy="610" r="28" fill="#b85c4b"/>
+    <text x="155" y="620" fill="#fffdfa" font-size="30" font-weight="700">2</text>
+    <text x="218" y="598" fill="#1f2a30" font-size="38" font-weight="700">誰向け</text>
+    <text x="218" y="646" fill="#5d696f" font-size="28">非エンジニア / 初心者 / 会社員</text>
+
+    <rect x="116" y="726" width="844" height="150" rx="28" fill="#eef4f2"/>
+    <circle cx="164" cy="800" r="28" fill="#30544d"/>
+    <text x="155" y="810" fill="#fffdfa" font-size="30" font-weight="700">3</text>
+    <text x="218" y="788" fill="#1f2a30" font-size="38" font-weight="700">何ができる</text>
+    <text x="218" y="836" fill="#5d696f" font-size="28">秘書化 / Skills化 / プロンプト配布</text>
+
+    <rect x="116" y="916" width="844" height="150" rx="28" fill="#fff6ee"/>
+    <circle cx="164" cy="990" r="28" fill="#b85c4b"/>
+    <text x="155" y="1000" fill="#fffdfa" font-size="30" font-weight="700">4</text>
+    <text x="218" y="978" fill="#1f2a30" font-size="38" font-weight="700">引っかかり</text>
+    <text x="218" y="1026" fill="#5d696f" font-size="28">数字 / 逆説 / 未来</text>
+  </g>
+
+  <rect x="116" y="1112" width="844" height="92" rx="24" fill="#f3eee5"/>
+  <text x="150" y="1168" fill="#1f2a30" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="30" font-weight="500">広すぎる言葉より、誰の何が変わるかを先に言う</text>
+
+  <text x="116" y="1242" fill="#5a676d" font-family="Noto Sans JP, Yu Gothic, sans-serif" font-size="28">Gaku@趣味でアプリつくるもの</text>
+</svg>
