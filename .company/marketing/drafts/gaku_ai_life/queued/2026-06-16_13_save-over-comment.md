@@ -1,0 +1,24 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "深夜・過程/弱さ開示(C)"
+topic: "始めたころの下手な投稿を消さない・過程ごと残したい"
+publish_at: 2026-06-16T22:50:00+09:00
+hook_pattern: C
+voice_model: "2026-06-07 本物の声モデル準拠"
+golden_slot: true
+applied_feedback:
+  - "深夜最強枠(median168/6-15に369)=過程開示型を置く・教育Tipsは外す"
+  - "弱さ→今の感情まで・架空数字なし"
+  - "勝負枠=投稿後30分gaku返信張り付き・リプ誘発で閉じる(会話ベロシティD-052)"
+---
+【本文】
+始めたころの自分の投稿、
+読み返すと下手すぎて笑う。
+
+でも、消さない。
+下手だった過程ごと残したいから🥹
+
+下手な過去って、消す派？残す派？

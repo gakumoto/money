@@ -1,0 +1,21 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "昼・体験/進捗(B)"
+topic: "昼休み15分にClaudeで副業の続きを進める・午後の自分への仕送り"
+publish_at: 2026-06-16T13:00:00+09:00
+hook_pattern: B
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "13:00枠は教育note論が即死(6-15:22views)→体験ベースに差し替え"
+  - "100字以内・自慢でなく共感・架空数字なし"
+---
+【本文】
+昼休みの15分、
+スマホでClaudeに
+副業の続きを考えてもらってます。
+
+午後の自分への
+仕送りみたいな感じ🤔

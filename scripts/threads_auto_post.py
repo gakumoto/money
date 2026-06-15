@@ -28,6 +28,14 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 load_dotenv(SCRIPT_DIR / ".env")
 PROJECT_ROOT = SCRIPT_DIR.parent
 
+# 鮮度ガード（2026-06-16 D-053）: publish_at から STALE_MINUTES 以上遅れた下書きは
+# 「時間帯がズレた」とみなして投稿せず expired/ に退避する。
+# 例: PC が寝てて深夜枠が出せず、朝のタスクで深夜投稿が繰り上がって流れる事故を防ぐ。
+# 帯内のズレ(同帯で +30〜60分遅れ)は許容し、帯をまたぐ大遅延(深夜→朝=6h+)だけ落とす。
+import os  # noqa: E402
+
+STALE_MINUTES = int(os.getenv("THREADS_STALE_MINUTES", "120"))
+
 sys.path.insert(0, str(SCRIPT_DIR))
 from _threads_api import ThreadsClient  # noqa: E402
 from _discord import notify  # noqa: E402
@@ -132,6 +140,38 @@ def move_to_posted(
     return new_path
 
 
+def publish_dt_of(path: Path):
+    """下書きの publish_at を tz 付き datetime で返す。無ければ None。"""
+    try:
+        d = parse_draft(path)
+    except (ValueError, OSError):
+        return None
+    pub = d["frontmatter"].get("publish_at", "").strip()
+    if not pub:
+        return None
+    try:
+        pub_dt = dt.datetime.fromisoformat(pub.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if pub_dt.tzinfo is None:
+        pub_dt = pub_dt.replace(tzinfo=dt.timezone.utc).astimezone()
+    return pub_dt
+
+
+def move_to_expired(path: Path, account: str, reason: str) -> Path:
+    """時間帯がズレた下書きを expired/<account>/ に退避（投稿しない）."""
+    expired_dir = PROJECT_ROOT / ".company" / "marketing" / "drafts" / account / "expired"
+    expired_dir.mkdir(parents=True, exist_ok=True)
+    new_path = expired_dir / path.name
+    text = path.read_text(encoding="utf-8")
+    text = re.sub(r"(status:\s*)\w+", r"\1expired", text, count=1)
+    note = f"expired_reason: \"{reason}\"\nexpired_at: {dt.datetime.now().astimezone().isoformat(timespec='seconds')}\n"
+    text = re.sub(r"\n---\s*\n", f"\n{note}---\n", text, count=1)
+    new_path.write_text(text, encoding="utf-8")
+    path.unlink()
+    return new_path
+
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__, file=sys.stderr)
@@ -154,8 +194,30 @@ def main():
         print(f"[auto_post] {account}: 投稿対象なし ({now.strftime('%H:%M')})")
         sys.exit(0)
 
-    # 1回の実行で1本だけ投稿 (キュー逐次消化)
-    target = due[0]
+    # 鮮度ガード (D-053): 古い順に見て、STALE_MINUTES 以上遅れたものは
+    # 時間帯がズレたとみなし expired/ に退避。最初の「鮮度OK」な1本を投稿する。
+    now_aware = now.astimezone()
+    target = None
+    for f in due:
+        pub_dt = publish_dt_of(f)
+        if pub_dt is not None:
+            late_min = (now_aware - pub_dt.astimezone()).total_seconds() / 60
+            if late_min > STALE_MINUTES:
+                if dry_run:
+                    print(f"[auto_post] (dry-run) 鮮度切れ退避対象: {f.name} ({int(late_min)}分遅れ)")
+                else:
+                    move_to_expired(
+                        f, account, f"{int(late_min)}分遅れ(>{STALE_MINUTES}分)で時間帯ズレ・自動退避"
+                    )
+                    print(f"[auto_post] 鮮度切れ退避: {f.name} ({int(late_min)}分遅れ) -> expired/")
+                continue
+        target = f
+        break
+
+    if target is None:
+        print(f"[auto_post] {account}: 鮮度OKな投稿なし（全て退避） ({now.strftime('%H:%M')})")
+        sys.exit(0)
+
     print(f"[auto_post] 対象: {target.name}")
     d = parse_draft(target)
 

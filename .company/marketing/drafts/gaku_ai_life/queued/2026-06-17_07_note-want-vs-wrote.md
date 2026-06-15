@@ -1,0 +1,21 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 教育
+template_type: "弱さ開示・進捗(C)"
+topic: "note書こうとした日と書けた日、比率1:5"
+publish_at: 2026-06-17T13:00:00+09:00
+hook_pattern: C
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "13:00枠=note系強(post-pattern 145.5)・体験で包む"
+  - "数字+弱さ・教える調NG"
+---
+【本文】
+note、書こうと思った日と
+書けた日の比率、
+1:5くらいです🥹
+
+書けなかった日も
+ぜんぶ続いてるうち。

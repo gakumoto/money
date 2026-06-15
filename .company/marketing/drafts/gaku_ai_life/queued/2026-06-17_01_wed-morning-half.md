@@ -1,0 +1,26 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "朝あいさつ・共感問いかけ(D)"
+topic: "水曜の朝、もう半分か・まだ半分か"
+publish_at: 2026-06-17T06:30:00+09:00
+hook_pattern: D
+voice_model: "2026-06-07 本物の声モデル準拠"
+golden_slot: true
+applied_feedback:
+  - "朝あいさつ☀+共感+自然な?終わり(post-pattern 2026-06)"
+  - "勝負枠=投稿後30分gaku返信張り付き(会話ベロシティD-052)"
+  - "曜日確認済(2026-06-17=水曜=平日)"
+  - "50字台・本物の声(短文・🥹温度)"
+---
+【本文】
+おはよございます🌞
+
+水曜の朝って、
+「もう半分か」って思う日と
+「まだ半分か」って思う日が
+ある気がする🥹
+
+あなたは今日、どっちですか?

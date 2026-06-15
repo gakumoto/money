@@ -1,0 +1,21 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 信頼構築
+template_type: "共感・問いかけ(D)"
+topic: "仕事帰り、頭が使い切ってる感覚"
+publish_at: 2026-06-17T19:30:00+09:00
+hook_pattern: D
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "?終わり・自然な独り言の続き(機械的CTAでない)"
+  - "数字(20分)で具体化"
+---
+【本文】
+仕事帰り、
+頭が使い切ってる感覚って
+わかる人います?
+
+帰宅後の最初の20分が
+いちばん戦闘です🥲

@@ -1,0 +1,21 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "通勤シーン観察(B+H)"
+topic: "水曜の朝バス、スマホ握る手が重く見える観察"
+publish_at: 2026-06-17T07:00:00+09:00
+hook_pattern: B
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "通勤=バス(電車でない・ファクト)"
+  - "50字以内・?で終わる"
+  - "観察ベースの軽い独り言"
+---
+【本文】
+水曜の朝のバス、
+スマホ握ってる手が
+ちょっとだけ重く見える🤔
+
+これ、ぼくだけかな?

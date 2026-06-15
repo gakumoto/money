@@ -1,0 +1,22 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 信頼構築
+template_type: "本音・進捗共感(C)"
+topic: "退勤前のこの時間、今日もnote書けるかな不安"
+publish_at: 2026-06-17T18:00:00+09:00
+hook_pattern: C
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "退勤前=オフィスファクト合致・弱さ開示"
+  - "完璧主義NG・カウントしない姿勢で着地"
+---
+【本文】
+退勤前のこの時間、
+「今日もnote書けるかな」って
+ちょっと不安になる🥹
+
+無理だった日は
+カウントしてないので
+気にしないことにしてます。
