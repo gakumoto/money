@@ -1,0 +1,26 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "朝あいさつ・共感問いかけ(D)"
+topic: "木曜の朝・週末まで残り2日って思うと急に頑張れる"
+publish_at: 2026-06-18T06:30:00+09:00
+hook_pattern: D
+voice_model: "2026-06-07 本物の声モデル準拠"
+golden_slot: true
+applied_feedback:
+  - "朝あいさつ☀+共感+自然な?終わり(post-pattern 2026-06実証)"
+  - "勝負枠=投稿後30分gaku返信張り付き(会話ベロシティD-052)"
+  - "曜日確認済(2026-06-18=木曜=平日・バス通勤朝)"
+  - "50字台・本物の声(短文・🥹温度)"
+---
+【本文】
+おはよございます☀
+
+木曜の朝、
+週末まであと2日って思うと
+急に頑張れる🥹
+
+あなたの今日は
+何でできてますか?
