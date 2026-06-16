@@ -1,7 +1,7 @@
 ---
 account: gaku_ai_life
 type: draft
-status: queued
+status: expired
 purpose: 集客
 template_type: "朝あいさつ・日常共感(B)"
 topic: "火曜朝のバス通勤・体力削られる共感"
@@ -14,6 +14,8 @@ applied_feedback:
   - "通勤はバス(電車でない・ファクト)"
   - "曜日確認済(2026-06-16=火曜=平日)"
   - "勝負枠=投稿後30分gaku返信張り付き・リプ誘発で閉じる(会話ベロシティD-052)"
+expired_reason: "132分遅れ(>120分)で時間帯ズレ・自動退避"
+expired_at: 2026-06-16T08:42:20+09:00
 ---
 【本文】
 おはよございます🌞

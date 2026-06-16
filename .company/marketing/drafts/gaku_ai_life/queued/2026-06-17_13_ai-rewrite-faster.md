@@ -5,7 +5,7 @@ status: queued
 purpose: 販売
 template_type: "深夜・本音ホットテイク(E)"
 topic: "AIに書かせた下書きを結局自分で書き直してる本音"
-publish_at: 2026-06-17T23:30:00+09:00
+publish_at: 2026-06-17T22:50:00+09:00
 hook_pattern: E
 voice_model: "2026-06-07 本物の声モデル準拠"
 applied_feedback:

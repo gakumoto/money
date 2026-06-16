@@ -1,7 +1,7 @@
 ---
 account: gaku_ai_life
 type: draft
-status: queued
+status: expired
 purpose: 集客
 template_type: "朝の観察(H)"
 topic: "Threadsで画像1枚あるとスクロール止まる確率が高い"
@@ -12,6 +12,8 @@ applied_feedback:
   - "断定は『あきらかに高い』+ 観察ベース"
   - "他人の調査でなく自分が気づいた形"
 research_source: "2026-05-16-collect.md:257 (Threads#16 画像で+60%)"
+expired_reason: "140分遅れ(>120分)で時間帯ズレ・自動退避"
+expired_at: 2026-06-16T10:30:02+09:00
 ---
 【本文】
 朝のバスで、

@@ -5,7 +5,7 @@ status: queued
 purpose: 信頼構築
 template_type: "深夜・過程開示(A)"
 topic: "Threads1ヶ月超え・note売上はまだ0円・辞めなくてよかった時間"
-publish_at: 2026-06-17T22:50:00+09:00
+publish_at: 2026-06-18T22:50:00+09:00
 hook_pattern: A
 voice_model: "2026-06-07 本物の声モデル準拠"
 golden_slot: true
