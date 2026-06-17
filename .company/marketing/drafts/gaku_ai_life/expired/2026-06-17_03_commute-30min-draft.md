@@ -1,7 +1,7 @@
 ---
 account: gaku_ai_life
 type: draft
-status: queued
+status: expired
 purpose: 集客
 template_type: "朝の習慣・体験(A)"
 topic: "通勤30分をThreadsの下書きに全部使ってる"
@@ -11,6 +11,8 @@ voice_model: "2026-06-07 本物の声モデル準拠"
 applied_feedback:
   - "数字(30分・1本)+ジャンル語(Threads)を冒頭"
   - "自分が今やってる選択・教える調を避ける"
+expired_reason: "226分遅れ(>120分)で時間帯ズレ・自動退避"
+expired_at: 2026-06-17T11:26:20+09:00
 ---
 【本文】
 通勤の30分、
