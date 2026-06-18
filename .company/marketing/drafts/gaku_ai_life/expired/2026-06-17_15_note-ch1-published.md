@@ -1,7 +1,7 @@
 ---
 account: gaku_ai_life
 type: draft
-status: queued
+status: expired
 purpose: 販売
 template_type: "深夜・余韻+note誘導(A)"
 topic: "無料noteのCh1だけ公開した・公開ボタン押すまでが長かった"
@@ -12,6 +12,8 @@ applied_feedback:
   - "ファクト準拠(2026-06-14にCh1公開済み)"
   - "売り込まず差し出す・固定匂わせ(未完型)"
   - "リンクなし・ジャンル語(note・Ch1)冒頭"
+expired_reason: "380分遅れ(>120分)で時間帯ズレ・自動退避"
+expired_at: 2026-06-18T06:30:02+09:00
 ---
 【本文】
 無料note、
