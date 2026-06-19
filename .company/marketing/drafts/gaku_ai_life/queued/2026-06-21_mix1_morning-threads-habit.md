@@ -1,0 +1,24 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "朝・共感あいさつ(当たり型)"
+topic: "朝いちでThreads開くのが習慣・みんな朝なに見てる"
+publish_at: 2026-06-21T06:30:00+09:00
+hook_pattern: B
+voice_model: "2026-06-07 本物の声モデル準拠"
+golden_slot: true
+source_research: "当たり型②朝の共感あいさつ(6/15 557v/C9)"
+applied_feedback:
+  - "朝あいさつ☀(実投稿の声)・曜日断定なし・リプ誘発・勝負枠30分張り付き"
+---
+【本文】
+おはようございます☀
+
+朝いちばんに
+スマホでThreads開くの、
+習慣になってきました🤔
+
+今日も、ゆるく動きます。
+みんなは朝、なに見てますか？
