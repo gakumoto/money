@@ -1,0 +1,28 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 販売
+template_type: "深夜・有料note告知(リンク1本・煽らない)"
+topic: "初の有料note公開告知・500円・コードなしで自動投稿まで作る全手順"
+publish_at: 2026-06-20T22:50:00+09:00
+hook_pattern: C
+voice_model: "2026-06-07 本物の声モデル準拠"
+golden_slot: true
+source_research: "D-055 初収益ローンチ / note-monetize-launch-kit"
+applied_feedback:
+  - "リンク誘導は1日1本・煽らない・500円=初値の理由を添える(希少性)"
+  - "勝負枠=投稿後30分gaku返信張り付き / 本文に過程の文脈で自然に"
+---
+【本文】
+note、初めて有料記事を出しました。
+
+「コードを書かずに、AIで自分用のツールを作って、
+Threadsの自動投稿まで動かす」全手順です。
+
+ぼく自身が一行も書かずに作った記録を、
+つまずいたところごと、全部。
+
+初めての値付けなので、500円にしました。
+よかったら、のぞいてみてください。
+→ プロフィールから
