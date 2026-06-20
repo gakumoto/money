@@ -1,0 +1,22 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 教育
+template_type: "夕・AI本音ホットテイク"
+topic: "会社でAI使うほど自分の頭で考える時間を意識して取りたい"
+publish_at: 2026-06-23T16:30:00+09:00
+hook_pattern: C
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "AI語りは正論NG・本音で・リプ誘発"
+---
+【本文】
+会社でAIを使うほど、
+"自分の頭で考える時間"を
+意識して取らないと、
+って思うようになりました🤔
+
+便利さと、うまく付き合いたい。
+
+みんな、その辺どうしてますか？

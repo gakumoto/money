@@ -171,6 +171,7 @@ def main():
     summary_lines = [
         f"📚 自動リサーチ実行 ({started.strftime('%Y-%m-%d %H:%M')})",
     ]
+    errors: list[str] = []
 
     yt_success = 0
     yt_failed = 0
@@ -187,6 +188,7 @@ def main():
                 print("    ✅ 完了")
             else:
                 yt_failed += 1
+                errors.append(f"YT {e['url']}: {(err or out or 'no output')[:160]}")
                 print(f"    ❌ 失敗 (rc={rc}): {err[:200]}")
         summary_lines.append(
             f"📺 YouTube: 成功 {yt_success} / 失敗 {yt_failed}"
@@ -207,6 +209,7 @@ def main():
                 print("    ✅ 完了")
             else:
                 web_failed += 1
+                errors.append(f"Web {theme}: {(err or out or 'no output')[:160]}")
                 print(f"    ❌ 失敗 (rc={rc}): {err[:200]}")
         summary_lines.append(
             f"🔍 Web: 成功 {web_success} / 失敗 {web_failed}"
@@ -219,10 +222,21 @@ def main():
         f"💾 結果: .company/research/topics/ を確認 / 翌朝の /post_bulk が自動参照"
     )
 
+    # 失敗の見える化（成功0をexit0で隠さない）
+    if total_failed := (yt_failed + web_failed):
+        summary_lines.append(f"⚠️ 失敗 {total_failed} 件")
+        if errors:
+            summary_lines.append("先頭エラー: " + errors[0])
+
     summary = "\n".join(summary_lines)
     print("\n" + summary)
     if not dry_run:
         notify(summary)
+
+    # 1件も成功せず失敗だけ（=全滅）なら、タスクを失敗として返す
+    if not dry_run and (yt_success + web_success) == 0 and total_failed > 0:
+        print("[watchlist] 全件失敗のため exit 1", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

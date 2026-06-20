@@ -1,0 +1,24 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 集客
+template_type: "朝・共感あいさつ(当たり型)"
+topic: "火曜の朝・完璧じゃなくていい・最初の一歩"
+publish_at: 2026-06-23T06:30:00+09:00
+hook_pattern: B
+voice_model: "2026-06-07 本物の声モデル準拠"
+golden_slot: true
+applied_feedback:
+  - "朝共感☀・曜日確認済(6/23=火)・リプ誘発・勝負枠30分張り付き"
+---
+【本文】
+おはようございます☀
+
+火曜の朝、まだ眠いけど
+今日も小さく動きます🤔
+
+完璧じゃなくていい。
+続けてるだけで、じゅうぶんえらい。
+
+みんな、今日の最初の一歩は何ですか？

@@ -1,6 +1,6 @@
 {
-  "generated": "2026-06-20T07:05:49.439982+09:00",
-  "total": 2599,
+  "generated": "2026-06-21T02:00:02.860207+09:00",
+  "total": 2605,
   "items": [
     {
       "id": "2026-05-14-collect.md:18",
@@ -33785,6 +33785,84 @@
       "source_file": "2026-06-20-collect.md",
       "source_line": 1015,
       "source_url": "https://blog.mean.ceo/anthropic-claude-news-june-2026/",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-20-collect.md:1050",
+      "title": "Claude Opus 4.7 が SWE-Bench Pro で GPT-5.5 に 5.7pt リード",
+      "hook": "コーディングなら Claude、自動でタスク回すなら GPT。同じ AI じゃなかった。Opus 4.7 が SWE-Bench Pro でまた首位戻ったらしい。ぼくは Claude Code 派なので嬉しい😌",
+      "type": "朝学び型 / 教育目的",
+      "genre": "AI開発",
+      "source_file": "2026-06-20-collect.md",
+      "source_line": 1050,
+      "source_url": "https://www.mindstudio.ai/blog/gpt-55-vs-claude-opus-47-coding-comparison",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-20-collect.md:1061",
+      "title": "Opus 4.7 と GPT-5.5 の値段、output トークンが 5 ドル違う",
+      "hook": "フロンティアモデル、input は同額なのに output は GPT のほうが 20% 高い。長文書かせる仕事だと地味に効く差。1 万トークン吐かせるだけで 5 円違う",
+      "type": "夜の振り返り / 教育目的",
+      "genre": "その他",
+      "source_file": "2026-06-20-collect.md",
+      "source_line": 1061,
+      "source_url": "https://www.datacamp.com/blog/gpt-5-5-vs-claude-opus-4-7",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-20-collect.md:1072",
+      "title": "Cowork: 非エンジニア向け Claude Code がデスクトップアプリで登場 (2026-01)",
+      "hook": "Cowork ってアプリ、Claude Code の中身をそのままデスクトップで使えるやつ。1 月に出てて見逃してた。CLI 怖い人ほど触る価値ある",
+      "type": "朝学び型 / 信頼構築",
+      "genre": "副業SE",
+      "source_file": "2026-06-20-collect.md",
+      "source_line": 1072,
+      "source_url": "https://www.yoshidumi.co.jp/collaboration-lab/chatgpt-copilot-gemini-claude",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-20-collect.md:1083",
+      "title": "Claude=日本語の読みやすさ、ChatGPT=画像/音声/GPTs の役割分担が固定化",
+      "hook": "副業ライティングやってる人は Claude 一択。ChatGPT で書いた文章は『AI 感』が抜けない。Claude にしたらクライアントの修正指示が半分になった (体験談)",
+      "type": "夕方学び / 教育目的",
+      "genre": "AI開発",
+      "source_file": "2026-06-20-collect.md",
+      "source_line": 1083,
+      "source_url": "https://note.com/aitukattemita/n/nb5421acb4034",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-20-collect.md:1094",
+      "title": "Codex vs Claude Code: 同じ $20/月、強みが真逆",
+      "hook": "Codex 触ってみたら『ヤバい締切前のリードエンジニア』みたいな仕事してきた。Claude Code は『ちゃんと考えて手を動かす同僚』。性格が違うだけで、優劣じゃない",
+      "type": "深夜思考 / 信頼構築",
+      "genre": "副業SE",
+      "source_file": "2026-06-20-collect.md",
+      "source_line": 1094,
+      "source_url": "https://www.aquallc.jp/claude-code-vs-codex/",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-20-collect.md:1105",
+      "title": "ChatGPT $100 プラン入ったら Codex のほうがコスパ良かった話",
+      "hook": "Claude Code Max 入ってる人、ChatGPT $100 プランの Codex 枠と比較した？ 重い処理回す前提なら向こうが安い (個人レポ)。ぼくは Claude 派続けるけど、選択肢として知っておく価値ある",
+      "type": "夜の振り返り / 教育目的",
+      "genre": "AI開発",
+      "source_file": "2026-06-20-collect.md",
+      "source_line": 1105,
+      "source_url": "https://note.com/siroki5715/n/ncdeca1b8b5a6",
       "status": "unused",
       "used_at": "",
       "used_in": ""
