@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-21T09:57:43+09:00",
+  "generated_at": "2026-06-21T14:17:39+09:00",
   "kpi": {
     "research": {
-      "today": 0,
-      "total": 257
+      "today": 1,
+      "total": 258
     },
     "impressions": {
-      "recent7d": 25372,
-      "today": 2227
+      "recent7d": 26284,
+      "today": 3139
     },
     "engagement": {
       "replies7d": 0,
@@ -18,7 +18,7 @@
       "yen": 0,
       "count": 0
     },
-    "queued": 21
+    "queued": 20
   },
   "staff": [
     {
@@ -34,10 +34,10 @@
       "id": "sora",
       "name": "ソラ",
       "role": "リサーチ",
-      "status": "待機",
+      "status": "完了",
       "detail": "競合・トレンドを調査しネタを供給",
       "kpiLabel": "リサーチ",
-      "kpiValue": "0件"
+      "kpiValue": "1件"
     },
     {
       "id": "erika",
@@ -46,7 +46,7 @@
       "status": "完了",
       "detail": "Threadsで発信・流入をつくる",
       "kpiLabel": "投稿",
-      "kpiValue": "1本"
+      "kpiValue": "2本"
     },
     {
       "id": "nana",
@@ -80,6 +80,12 @@
     {
       "who": "エリカ",
       "action": "投稿",
+      "what": "最近、AIで自分用のツールを",
+      "at": "12:00"
+    },
+    {
+      "who": "エリカ",
+      "action": "投稿",
       "what": "おはようございます☀",
       "at": "06:30"
     },
@@ -106,12 +112,6 @@
       "action": "投稿",
       "what": "土曜の夕方って、",
       "at": "19:30"
-    },
-    {
-      "who": "エリカ",
-      "action": "投稿",
-      "what": "土曜の夕方。",
-      "at": "18:00"
     }
   ],
   "note": "数字は実データ。取れない値はnull(画面で「—」)。売上は sales-manual.json で手入力可。"

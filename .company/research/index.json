@@ -1,6 +1,6 @@
 {
-  "generated": "2026-06-21T02:00:02.860207+09:00",
-  "total": 2605,
+  "generated": "2026-06-21T14:17:36.576394+09:00",
+  "total": 2611,
   "items": [
     {
       "id": "2026-05-14-collect.md:18",
@@ -33863,6 +33863,84 @@
       "source_file": "2026-06-20-collect.md",
       "source_line": 1105,
       "source_url": "https://note.com/siroki5715/n/ncdeca1b8b5a6",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-21-collect.md:16",
+      "title": "① Claude課金が激変（2026-06-15施行）エージェント利用が別枠化",
+      "hook": "AIに会社を運営させてたら、6/15から“人件費”の仕組みが変わった。ぼくの自動投稿、コスト的に大丈夫か数えてみた」＝自分ごと×時事",
+      "type": "夜振り返り / 過程開示（AI会社の\"運営コスト\"）",
+      "genre": "note副業",
+      "source_file": "2026-06-21-collect.md",
+      "source_line": 16,
+      "source_url": "https://ai-revolution.co.jp/media/claude-agent-sdk-billing-june-2026/",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-21-collect.md:27",
+      "title": "② note 30万記事分析：伸びてるのは「AI活用」テーマ（2026-01-07発表）",
+      "hook": "note公式が30万記事を分析した結果、一番売れてるのは“AI活用”だった。ぼくが今書いてるテーマ、ど真ん中だったらしい」＝権威データ×自分の現在地",
+      "type": "昼ノウハウ / 教育目的（note導線）",
+      "genre": "note副業",
+      "source_file": "2026-06-21-collect.md",
+      "source_line": 27,
+      "source_url": "https://prtimes.jp/main/html/rd/p/000000360.000017890.html",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-21-collect.md:38",
+      "title": "③ Threadsアルゴリズム2026：会話の質と初速がすべて",
+      "hook": "Threads、いいね数じゃなくて“会話の盛り上がり”で伸びるらしい。だからぼくはAI社員に全部書かせず、返信だけ自分でやってる」＝裏付け×自分の運用",
+      "type": "朝学び / 教育（ただし自分の体験に潜らせる）",
+      "genre": "Threads運用",
+      "source_file": "2026-06-21-collect.md",
+      "source_line": 38,
+      "source_url": "https://addness.co.jp/media/threads-algorithms/",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-21-collect.md:49",
+      "title": "④ 2026は「AIに丸投げして管理する」が稼ぎ方の標準・先行者利益の最後",
+      "hook": "“AIに丸投げして管理する”のが2026の働き方らしい。ぼく、半年前から社員6人のAI会社でそれやってます。同じことしてる人います？」＝潮流×先行＋参加型",
+      "type": "深夜思考 / 仲間帰属",
+      "genre": "その他",
+      "source_file": "2026-06-21-collect.md",
+      "source_line": 49,
+      "source_url": "https://ai-bloga.com/aitechnology/2189/",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-21-collect.md:60",
+      "title": "⑤ Claude Code 6月の新機能（Opus 4.8 / Fable 5 / 入れ子サブエージェント）",
+      "hook": "AIが“部下のAI”を持てるようになった（入れ子サブエージェント5段）。ぼくの会社、社員がさらに人を雇い始めた感ある」＝新機能×会社メタファー",
+      "type": "昼進捗 / 過程開示",
+      "genre": "AI開発",
+      "source_file": "2026-06-21-collect.md",
+      "source_line": 60,
+      "source_url": "https://ai-heartland.com/news/claude-code-june-2026-update/",
+      "status": "unused",
+      "used_at": "",
+      "used_in": ""
+    },
+    {
+      "id": "2026-06-21-collect.md:71",
+      "title": "⑥ note収益化はAI時代に激変・個人が月10万を狙う構造",
+      "hook": "読み物noteで信頼を作って、ノウハウnoteで価格を取る。ぼくの実験記がまさにこの形になってきた」＝設計の言語化",
+      "type": "夜振り返り（note導線）",
+      "genre": "note副業",
+      "source_file": "2026-06-21-collect.md",
+      "source_line": 71,
+      "source_url": "https://note.com/tothinks/n/nea3628c6952c",
       "status": "unused",
       "used_at": "",
       "used_in": ""
