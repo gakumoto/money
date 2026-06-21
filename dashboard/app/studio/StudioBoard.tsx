@@ -16,6 +16,16 @@ export interface Staff {
   kpiLabel: string
   kpiValue: string
   feed?: string[]
+  timecard?: { status: string; in: string | null; out: string | null; count: number; unit: string; note: string }
+}
+interface Goal {
+  key: string
+  label: string
+  current: number
+  target: number
+  unit: string
+  pct: number
+  note: string
 }
 interface Activity {
   who: string
@@ -24,6 +34,10 @@ interface Activity {
   at: string
 }
 interface Company {
+  name?: string
+  mission?: string
+  creed?: string[]
+  goals?: Goal[]
   next_hire: { at: number; name: string; role: string; remaining: number } | null
   outbound: { ready: boolean; queries: string[]; frames: { situation: string; frame: string }[]; checklist?: string[] } | null
 }
@@ -152,10 +166,53 @@ export default function StudioBoard({
             {lastRun.msg}
           </div>
         )}
+        {/* 目標設定 */}
+        {company?.goals && company.goals.length > 0 && (
+          <div className="mb-3 rounded-xl bg-[#121826] border border-zinc-800 p-3">
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wider mb-2">目標</div>
+            <div className="space-y-2">
+              {company.goals.map((g) => (
+                <div key={g.key}>
+                  <div className="flex items-baseline justify-between text-[11px]">
+                    <span className="text-zinc-300">{g.label}</span>
+                    <span className="text-zinc-400 tabular-nums">
+                      {g.current.toLocaleString('en-US')}<span className="text-zinc-600"> / {g.target.toLocaleString('en-US')}{g.unit}</span>
+                    </span>
+                  </div>
+                  <div className="mt-1 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                    <div className="h-full bg-emerald-500" style={{ width: `${g.pct}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 社訓 */}
+        {company?.creed && company.creed.length > 0 && (
+          <div className="mb-3 rounded-xl bg-gradient-to-br from-rose-950/40 to-zinc-900 border border-rose-900/30 p-3">
+            <div className="text-[10px] text-rose-300/80 uppercase tracking-wider mb-1">社訓</div>
+            {company.mission && <p className="text-[11px] text-zinc-300 mb-1.5">{company.mission}</p>}
+            <ol className="space-y-0.5">
+              {company.creed.map((c, i) => (
+                <li key={i} className="text-[11px] text-zinc-400 flex gap-1.5">
+                  <span className="text-rose-400/70">{i + 1}.</span>
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
         <div className="space-y-2">
           {staff.map((s) => {
             const ac = ACCENT[s.id] ?? ACCENT.sora
             const on = s.id === selectedId
+            const tcLine = s.timecard
+              ? s.timecard.in
+                ? `🕐 ${s.timecard.in}${s.timecard.out && s.timecard.out !== s.timecard.in ? `〜${s.timecard.out}` : ''}${s.timecard.count ? ` ・${s.timecard.count}${s.timecard.unit}` : ''}`
+                : '🕐 未出勤'
+              : null
             return (
               <button
                 key={s.id}
@@ -169,6 +226,7 @@ export default function StudioBoard({
                   </div>
                   <span className={`shrink-0 text-[10px] px-1.5 py-0.5 rounded ${BADGE[s.status] ?? BADGE['待機']}`}>{s.status}</span>
                 </div>
+                {tcLine && <div className="mt-1 text-[10px] text-zinc-500">{tcLine}</div>}
                 {s.id === 'sakura' ? (
                   <div className="mt-2 text-[11px] text-rose-300">▶ 社内を巡回中</div>
                 ) : (
@@ -206,8 +264,17 @@ export default function StudioBoard({
               <button onClick={() => setSelectedId(null)} className="text-zinc-500 hover:text-zinc-200 text-2xl leading-none">×</button>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-3 flex items-center gap-2">
               <span className={`text-[11px] px-2 py-0.5 rounded ${BADGE[selected.status] ?? BADGE['待機']}`}>{selected.status}</span>
+              {selected.timecard && (
+                <span className="text-[11px] text-zinc-400">
+                  🕐 {selected.timecard.in
+                    ? `${selected.timecard.in}${selected.timecard.out && selected.timecard.out !== selected.timecard.in ? `〜${selected.timecard.out}` : ''} 出勤`
+                    : '未出勤'}
+                  {selected.timecard.count ? ` ・本日${selected.timecard.count}${selected.timecard.unit}` : ''}
+                  {selected.timecard.note ? `（${selected.timecard.note}）` : ''}
+                </span>
+              )}
             </div>
 
             <div className="mt-4 rounded-lg bg-black/30 p-3">

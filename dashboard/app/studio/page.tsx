@@ -14,6 +14,7 @@ interface Staff {
   kpiLabel: string
   kpiValue: string
   feed?: string[]
+  timecard?: { status: string; in: string | null; out: string | null; count: number; unit: string; note: string }
 }
 interface StudioData {
   generated_at: string
@@ -28,6 +29,10 @@ interface StudioData {
   staff: Staff[]
   activity: { who: string; action: string; what: string; at: string }[]
   company?: {
+    name?: string
+    mission?: string
+    creed?: string[]
+    goals?: { key: string; label: string; current: number; target: number; unit: string; pct: number; note: string }[]
     next_hire: { at: number; name: string; role: string; remaining: number } | null
     outbound: { ready: boolean; queries: string[]; frames: { situation: string; frame: string }[]; checklist?: string[] } | null
   }

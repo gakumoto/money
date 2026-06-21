@@ -196,6 +196,39 @@ def ceo_summary(today: str) -> list[str]:
     return out
 
 
+def load_json_safe(p: Path) -> dict:
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def mtime_hm(p: Path) -> str | None:
+    try:
+        return dt.datetime.fromtimestamp(p.stat().st_mtime).strftime("%H:%M")
+    except OSError:
+        return None
+
+
+def posted_times_today(posted_dir: Path, today: str) -> list[str]:
+    out: list[str] = []
+    if not posted_dir.exists():
+        return out
+    for f in posted_dir.glob(f"{today}_*.md"):
+        m = re.match(r"\d{4}-\d{2}-\d{2}_(\d{2})(\d{2})", f.name)
+        if m:
+            out.append(f"{m.group(1)}:{m.group(2)}")
+    return sorted(out)
+
+
+def files_today(d: Path, today: str) -> list[Path]:
+    if not d.exists():
+        return []
+    return [f for f in d.glob("*.md")
+            if dt.datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") == today
+            and f.name.lower() not in ("readme.md", "_template.md")]
+
+
 def main() -> None:
     today = jst_today()
     mk = PROJECT_ROOT / ".company" / "marketing" / "drafts" / ACCOUNT
@@ -268,6 +301,43 @@ def main() -> None:
     for s in staff:
         s["feed"] = feeds.get(s["id"], [])
 
+    # タイムカード（実イベントの時刻から打刻を作る）
+    ptimes = posted_times_today(posted_dir, today)
+    research_files = files_today(research_dir, today)
+    article_files = files_today(articles_dir, today)
+    ceo_file = PROJECT_ROOT / ".company" / "secretary" / "reports" / f"{today}-ceo.md"
+    ob_file = PROJECT_ROOT / ".company" / "reports" / "outbound-today.json"
+
+    def card(status, cin=None, cout=None, count=0, unit="", note=""):
+        return {"status": status, "in": cin, "out": cout, "count": count, "unit": unit, "note": note}
+
+    tc: dict[str, dict] = {
+        "sakura": card("巡回中", mtime_hm(ceo_file) if ceo_file.exists() else None, None, 0, "", "統括"),
+        "erika": card("出勤", ptimes[0], ptimes[-1], len(ptimes), "投稿") if ptimes else card("未出勤", unit="投稿"),
+        "sora": card("出勤", mtime_hm(research_files[0]), None, len(research_files), "リサーチ") if research_files else card("未出勤", unit="リサーチ"),
+        "yui": card("出勤", mtime_hm(article_files[0]), None, len(article_files), "記事") if article_files else card("未出勤", unit="記事"),
+        "nana": card("出勤", mtime_hm(ob_file), None, 0, "絡み", "リスト準備済・実務は手動") if (outbound := load_outbound_today(today)) and outbound.get("ready") else card("未出勤", unit="絡み"),
+        "aoi": card("出勤", None, None, sales["count"], "売上") if sales["count"] > 0 else card("未出勤", unit="売上"),
+    }
+    for s in staff:
+        s["timecard"] = tc.get(s["id"], card("未出勤"))
+
+    # 目標・社訓（company-config.json）
+    cfg = load_json_safe(PROJECT_ROOT / ".company" / "company-config.json")
+    goals = []
+    cur_map = {
+        "followers": th["followers"] or 0,
+        "sales_month": sales["yen"],
+        "posts_today": len(ptimes),
+        "research_today": research_today,
+    }
+    for key, meta in (cfg.get("goals") or {}).items():
+        target = meta.get("target") or 0
+        c = cur_map.get(key, 0)
+        pct = min(100, round(c / target * 100)) if target else 0
+        goals.append({"key": key, "label": meta.get("label", key), "current": c,
+                      "target": target, "unit": meta.get("unit", ""), "pct": pct, "note": meta.get("note", "")})
+
     # 次の採用マイルストーン（D: 成長イベント）
     HIRES = [(300, "カイ", "アナリスト"), (500, "ミオ", "デザイナー"),
              (1000, "レン", "コミュニティ"), (2000, "ツカサ", "プロダクト")]
@@ -295,6 +365,10 @@ def main() -> None:
         "staff": staff,
         "activity": recent_activity(posted_dir),
         "company": {
+            "name": cfg.get("name", "サクラStudio"),
+            "mission": cfg.get("mission", ""),
+            "creed": cfg.get("creed", []),
+            "goals": goals,
             "next_hire": next_hire,
             "outbound": outbound,
         },
