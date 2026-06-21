@@ -1,6 +1,7 @@
-// オフィス（アイソメトリック／斜め見下ろしのドット絵風・サーバーコンポーネントでOK）
+'use client'
+// オフィス（アイソメトリック／斜め見下ろしのドット絵風・クリックで社員選択）
 // 2:1 アイソメ投影。床/壁/窓/デスク+モニタ/着席キャラ/サーバーラック(LED点滅)/休憩室/本棚/観葉植物。
-// データ連携: 役割色・稼働状態(完了/巡回中で画面点灯)を維持。
+// データ連携: 役割色・稼働状態(完了/巡回中で画面点灯)を維持。キャラ/名札クリックで onSelect。
 
 interface Staff {
   id: string
@@ -82,11 +83,18 @@ function Person({
 }
 
 // ── デスク＋モニタ＋着席キャラ（名札は最前面レイヤーで別途描画） ──
-function Workstation({ gx, gy, staff }: { gx: number; gy: number; staff: Staff }) {
+function Workstation({
+  gx, gy, staff, selected, onSelect,
+}: {
+  gx: number; gy: number; staff: Staff; selected?: boolean; onSelect?: (id: string) => void
+}) {
   const c = SEAT[staff.id] ?? SEAT.sora
   const active = staff.status === '完了' || staff.status === '巡回中'
+  const [cx, cy] = P(gx + 0.85, gy + 0.05)
   return (
-    <g>
+    <g onClick={() => onSelect?.(staff.id)} style={{ cursor: 'pointer' }}>
+      {/* 選択ハイライト（足元のリング） */}
+      {selected && <ellipse cx={cx} cy={cy} rx={21} ry={9} fill="none" stroke={c.screen} strokeWidth={2.5} />}
       {/* 着席キャラ（デスクの奥＝先に描画して下半身を隠す） */}
       <Person gx={gx + 0.85} gy={gy + 0.05} body={c.body} hair={c.hair} />
       {/* デスク天板 */}
@@ -100,12 +108,20 @@ function Workstation({ gx, gy, staff }: { gx: number; gy: number; staff: Staff }
   )
 }
 
-// ── 名札（名前だけ・キャラ頭上・最前面でまとめて描画） ──
-function NameTag({ x, y, name, color }: { x: number; y: number; name: string; color: string }) {
+// ── 名札（名前だけ・キャラ頭上・最前面でまとめて描画・クリック可） ──
+function NameTag({
+  id, x, y, name, color, selected, onSelect,
+}: {
+  id: string; x: number; y: number; name: string; color: string
+  selected?: boolean; onSelect?: (id: string) => void
+}) {
   const w = name.length * 14 + 14
   return (
-    <g>
-      <rect x={x - w / 2} y={y - 16} width={w} height={16} rx={8} fill="#0d1016ee" stroke="#2b3340" />
+    <g onClick={() => onSelect?.(id)} style={{ cursor: 'pointer' }}>
+      <rect
+        x={x - w / 2} y={y - 16} width={w} height={16} rx={8}
+        fill="#0d1016ee" stroke={selected ? color : '#2b3340'} strokeWidth={selected ? 2 : 1}
+      />
       <text x={x} y={y - 4} textAnchor="middle" fontSize="11" fontWeight="bold" fill={color}>
         {name}
       </text>
@@ -127,7 +143,11 @@ function Plant({ gx, gy }: { gx: number; gy: number }) {
   )
 }
 
-export default function OfficeScene({ staff }: { staff: Staff[] }) {
+export default function OfficeScene({
+  staff, selectedId, onSelect,
+}: {
+  staff: Staff[]; selectedId?: string; onSelect?: (id: string) => void
+}) {
   const byId = Object.fromEntries(staff.map((s) => [s.id, s]))
   const fb = (id: string): Staff => byId[id] ?? { id, name: id, role: '', status: '待機' }
 
@@ -265,15 +285,24 @@ export default function OfficeScene({ staff }: { staff: Staff[] }) {
   ]
   const seatEls = seats.map((s) => ({
     sum: s.gx + s.gy,
-    el: <Workstation key={s.id} gx={s.gx} gy={s.gy} staff={fb(s.id)} />,
+    el: (
+      <Workstation
+        key={s.id} gx={s.gx} gy={s.gy} staff={fb(s.id)}
+        selected={selectedId === s.id} onSelect={onSelect}
+      />
+    ),
   }))
 
   // 社長サクラ（立ち・中央手前）
   const sakura = fb('sakura')
+  const [skx, sky] = P(4.0, 5.5)
   const sakuraEl = {
     sum: 4.0 + 5.5,
     el: (
-      <g key="sakura">
+      <g key="sakura" onClick={() => onSelect?.('sakura')} style={{ cursor: 'pointer' }}>
+        {selectedId === 'sakura' && (
+          <ellipse cx={skx} cy={sky} rx={21} ry={9} fill="none" stroke={SEAT.sakura.screen} strokeWidth={2.5} />
+        )}
         <Person gx={4.0} gy={5.5} body={SEAT.sakura.body} hair={SEAT.sakura.hair} standing />
       </g>
     ),
@@ -293,11 +322,11 @@ export default function OfficeScene({ staff }: { staff: Staff[] }) {
   const labels = [
     ...seats.map((s) => {
       const [x, y] = P(s.gx + 0.85, s.gy + 0.05)
-      return { x, y: y - 60, name: fb(s.id).name, color: (SEAT[s.id] ?? SEAT.sora).screen }
+      return { id: s.id, x, y: y - 60, name: fb(s.id).name, color: (SEAT[s.id] ?? SEAT.sora).screen }
     }),
     (() => {
       const [x, y] = P(4.0, 5.5)
-      return { x, y: y - 62, name: sakura.name, color: SEAT.sakura.screen }
+      return { id: 'sakura', x, y: y - 62, name: sakura.name, color: SEAT.sakura.screen }
     })(),
   ]
 
@@ -318,9 +347,12 @@ export default function OfficeScene({ staff }: { staff: Staff[] }) {
       {/* 家具・人物（奥→手前） */}
       {movable.map((m) => m.el)}
 
-      {/* 名札（最前面・名前のみ） */}
-      {labels.map((l, i) => (
-        <NameTag key={i} x={l.x} y={l.y} name={l.name} color={l.color} />
+      {/* 名札（最前面・名前のみ・クリック可） */}
+      {labels.map((l) => (
+        <NameTag
+          key={l.id} id={l.id} x={l.x} y={l.y} name={l.name} color={l.color}
+          selected={selectedId === l.id} onSelect={onSelect}
+        />
       ))}
     </svg>
   )
