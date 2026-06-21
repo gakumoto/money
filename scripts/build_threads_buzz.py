@@ -53,6 +53,18 @@ def main() -> None:
         if cur is None or (likes or 0) > (cur["likes"] or 0):
             seen[url] = {"url": url, "handle": handle, "post_id": pid, "likes": likes, "genre": genre}
 
+    # 本文(別取得)があればマージ
+    bodies_path = ROOT / ".company" / "research" / "threads-buzz-bodies.json"
+    if bodies_path.exists():
+        try:
+            bj = json.loads(bodies_path.read_text(encoding="utf-8"))
+            bmap = {b["url"]: b.get("body") for b in bj.get("items", []) if b.get("body")}
+            for url, rec in seen.items():
+                if url in bmap:
+                    rec["body"] = bmap[url]
+        except Exception as e:
+            print(f"[buzz] 本文マージ失敗(続行): {e}", file=sys.stderr)
+
     items = sorted(seen.values(), key=lambda x: (x["likes"] or 0), reverse=True)
     by_genre: dict[str, int] = {}
     for it in items:

@@ -11,6 +11,7 @@ interface Buzz {
   post_id: string
   likes: number | null
   genre: string | null
+  body?: string
 }
 interface BuzzData {
   generated_at: string
@@ -109,14 +110,19 @@ export default async function Buzz({ searchParams }: { searchParams: { g?: strin
                 {it.genre && (
                   <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">{it.genre}</span>
                 )}
+                <span className="ml-auto shrink-0 text-zinc-600 text-xs">↗</span>
               </div>
-              <div className="mt-1 flex items-center gap-1 text-rose-400">
+              {it.body && (
+                <p className="mt-1 text-[14px] text-zinc-200 whitespace-pre-wrap leading-relaxed break-words line-clamp-6">
+                  {it.body}
+                </p>
+              )}
+              <div className="mt-1.5 flex items-center gap-1 text-rose-400">
                 <span className="text-base leading-none">♡</span>
                 <span className="font-bold">{compact(it.likes)}</span>
                 <span className="text-xs text-zinc-600 ml-1">いいね</span>
               </div>
             </div>
-            <span className="self-center text-zinc-600 text-sm">開く ↗</span>
           </a>
         ))}
       </div>
