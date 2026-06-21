@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-06-21T09:57:43+09:00",
+  "kpi": {
+    "research": {
+      "today": 0,
+      "total": 257
+    },
+    "impressions": {
+      "recent7d": 25372,
+      "today": 2227
+    },
+    "engagement": {
+      "replies7d": 0,
+      "likes7d": 0
+    },
+    "followers": 282,
+    "sales": {
+      "yen": 0,
+      "count": 0
+    },
+    "queued": 21
+  },
+  "staff": [
+    {
+      "id": "sakura",
+      "name": "サクラ",
+      "role": "社長 / 統括",
+      "status": "巡回中",
+      "detail": "全体を統括・確認・指示",
+      "kpiLabel": "統括",
+      "kpiValue": "稼働"
+    },
+    {
+      "id": "sora",
+      "name": "ソラ",
+      "role": "リサーチ",
+      "status": "待機",
+      "detail": "競合・トレンドを調査しネタを供給",
+      "kpiLabel": "リサーチ",
+      "kpiValue": "0件"
+    },
+    {
+      "id": "erika",
+      "name": "エリカ",
+      "role": "発信",
+      "status": "完了",
+      "detail": "Threadsで発信・流入をつくる",
+      "kpiLabel": "投稿",
+      "kpiValue": "1本"
+    },
+    {
+      "id": "nana",
+      "name": "ナナ",
+      "role": "交流",
+      "status": "待機",
+      "detail": "リプ・引用でフォロワーと関係構築",
+      "kpiLabel": "交流",
+      "kpiValue": "0件"
+    },
+    {
+      "id": "yui",
+      "name": "ユイ",
+      "role": "制作",
+      "status": "完了",
+      "detail": "無料note・記事で教育→導線へ",
+      "kpiLabel": "記事",
+      "kpiValue": "21本"
+    },
+    {
+      "id": "aoi",
+      "name": "アオイ",
+      "role": "営業",
+      "status": "待機",
+      "detail": "有料note・ファネルで収益化",
+      "kpiLabel": "売上",
+      "kpiValue": "¥0"
+    }
+  ],
+  "activity": [
+    {
+      "who": "エリカ",
+      "action": "投稿",
+      "what": "おはようございます☀",
+      "at": "06:30"
+    },
+    {
+      "who": "エリカ",
+      "action": "投稿",
+      "what": "Threads1ヶ月続けて",
+      "at": "23:30"
+    },
+    {
+      "who": "エリカ",
+      "action": "投稿",
+      "what": "note、初めて有料記事を出しました。",
+      "at": "22:50"
+    },
+    {
+      "who": "エリカ",
+      "action": "投稿",
+      "what": "土曜の21時、",
+      "at": "21:00"
+    },
+    {
+      "who": "エリカ",
+      "action": "投稿",
+      "what": "土曜の夕方って、",
+      "at": "19:30"
+    },
+    {
+      "who": "エリカ",
+      "action": "投稿",
+      "what": "土曜の夕方。",
+      "at": "18:00"
+    }
+  ],
+  "note": "数字は実データ。取れない値はnull(画面で「—」)。売上は sales-manual.json で手入力可。"
+}
