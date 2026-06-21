@@ -33915,9 +33915,9 @@
       "source_file": "2026-06-21-collect.md",
       "source_line": 49,
       "source_url": "https://ai-bloga.com/aitechnology/2189/",
-      "status": "unused",
-      "used_at": "",
-      "used_in": ""
+      "status": "used",
+      "used_at": "2026-06-21T14:25:28.824917+09:00",
+      "used_in": ".company/marketing/drafts/gaku_ai_life/2026-06-21_01_ai-company-marunage.md"
     },
     {
       "id": "2026-06-21-collect.md:60",
