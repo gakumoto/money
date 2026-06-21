@@ -13,6 +13,7 @@ interface Staff {
   detail: string
   kpiLabel: string
   kpiValue: string
+  feed?: string[]
 }
 interface StudioData {
   generated_at: string

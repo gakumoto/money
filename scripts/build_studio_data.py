@@ -131,6 +131,71 @@ def load_outbound_today(today: str) -> dict | None:
     }
 
 
+def read_title(f: Path) -> str:
+    try:
+        t = f.read_text(encoding="utf-8")
+    except OSError:
+        return f.stem
+    m = re.search(r'^title:\s*"?(.+?)"?\s*$', t, re.M)
+    if m:
+        return m.group(1)
+    m = re.search(r"^#\s+(.+)$", t, re.M)
+    if m:
+        return m.group(1)
+    return f.stem
+
+
+def research_titles(research_dir: Path, today: str, limit: int = 6) -> list[str]:
+    f = research_dir / f"{today}-collect.md"
+    if not f.exists():
+        return []
+    return re.findall(r"^###\s+(.+)$", f.read_text(encoding="utf-8"), re.M)[:limit]
+
+
+def article_titles(articles_dir: Path, limit: int = 6) -> list[str]:
+    if not articles_dir.exists():
+        return []
+    fs = sorted(articles_dir.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)
+    out: list[str] = []
+    for f in fs:
+        if f.name.lower() in ("readme.md", "_template.md"):
+            continue
+        out.append(read_title(f))
+        if len(out) >= limit:
+            break
+    return out
+
+
+def paid_status(articles_dir: Path) -> str | None:
+    if not articles_dir.exists():
+        return None
+    for f in articles_dir.glob("*.md"):
+        if "paid" not in f.name.lower():
+            continue
+        try:
+            t = f.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        pm = re.search(r"price:\s*([0-9]+)", t)
+        price = f"{pm.group(1)}円" if pm else "有料"
+        return f"有料note: {read_title(f)}（{price}）"
+    return None
+
+
+def ceo_summary(today: str) -> list[str]:
+    f = PROJECT_ROOT / ".company" / "secretary" / "reports" / f"{today}-ceo.md"
+    if not f.exists():
+        return []
+    t = f.read_text(encoding="utf-8")
+    out: list[str] = []
+    cm = re.search(r"## 社長コメント\s*\n(.+)", t)
+    if cm:
+        out.append("💬 " + cm.group(1).strip())
+    for m in re.findall(r"^- (.+)$", t.split("## 明日の方針")[-1], re.M)[:4]:
+        out.append("→ " + m)
+    return out
+
+
 def main() -> None:
     today = jst_today()
     mk = PROJECT_ROOT / ".company" / "marketing" / "drafts" / ACCOUNT
@@ -183,6 +248,25 @@ def main() -> None:
          "detail": "有料note・ファネルで収益化",
          "kpiLabel": "売上", "kpiValue": f"¥{sales['yen']:,}"},
     ]
+
+    # 各社員の成果詳細（Webパネル表示用 feed）
+    acts = recent_activity(posted_dir)
+    ob = load_outbound_today(today)
+    feeds: dict[str, list[str]] = {
+        "sakura": ceo_summary(today) or ["社内を巡回・統括中"],
+        "sora": ([f"今日のネタ: {t}" for t in research_titles(research_dir, today)]
+                 or ["今日のリサーチはまだ"]) + [f"ネタ総数 {research_total}本"],
+        "erika": ([f"{a['at']} {a['what']}" for a in acts[:5]]
+                  or ["今日の投稿はまだ"]) + [f"投稿済 {count_md(posted_dir)}本 / キュー {queued_n}本"],
+        "nana": ([f"絡みクエリ {len(ob['queries'])}・返信フレーム {len(ob['frames'])} 用意済"]
+                 if ob and ob.get("ready") else ["今日の絡みリスト未生成（ボタンで作成）"])
+                + ["実際の絡みは手作業で5〜10件"],
+        "yui": [f"記事: {t}" for t in article_titles(articles_dir)] or ["記事なし"],
+        "aoi": [paid_status(articles_dir) or "有料note未検出",
+                f"購入 {sales['count']}件 / 売上 ¥{sales['yen']:,}"],
+    }
+    for s in staff:
+        s["feed"] = feeds.get(s["id"], [])
 
     # 次の採用マイルストーン（D: 成長イベント）
     HIRES = [(300, "カイ", "アナリスト"), (500, "ミオ", "デザイナー"),

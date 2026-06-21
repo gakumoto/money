@@ -15,6 +15,7 @@ export interface Staff {
   detail: string
   kpiLabel: string
   kpiValue: string
+  feed?: string[]
 }
 interface Activity {
   who: string
@@ -96,7 +97,6 @@ export default function StudioBoard({
   const selected = staff.find((s) => s.id === selectedId) ?? null
   const a = selected ? ACCENT[selected.id] ?? ACCENT.sora : ACCENT.sora
   const info = selected ? INFO[selected.id] : null
-  const recent = selected ? activity.filter((x) => x.who === selected.name).slice(0, 6) : []
 
   return (
     <div className="grid lg:grid-cols-[1fr_330px] gap-4 p-4">
@@ -239,14 +239,15 @@ export default function StudioBoard({
             )}
 
             <div className="mt-4">
-              <div className="text-[10px] text-zinc-500 uppercase tracking-wider">最近の動き</div>
+              <div className="text-[10px] text-zinc-500 uppercase tracking-wider">成果の詳細</div>
               <ul className="mt-1 space-y-1">
-                {recent.length === 0 && <li className="text-[12px] text-zinc-600">記録なし</li>}
-                {recent.map((x, i) => (
-                  <li key={i} className="text-[12px] text-zinc-400 flex gap-2">
-                    <span className="text-zinc-600 tabular-nums">{x.at}</span>
-                    <span className="text-emerald-400">{x.action}</span>
-                    <span className="text-zinc-300 truncate">{x.what}</span>
+                {(!selected.feed || selected.feed.length === 0) && (
+                  <li className="text-[12px] text-zinc-600">記録なし</li>
+                )}
+                {selected.feed?.map((line, i) => (
+                  <li key={i} className="text-[12px] text-zinc-300 flex gap-1.5">
+                    <span className="text-emerald-500">•</span>
+                    <span>{line}</span>
                   </li>
                 ))}
               </ul>
