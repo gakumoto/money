@@ -7,6 +7,7 @@ const navItems = [
   { href: '/studio', label: 'Studio', icon: '🏢', external: false },
   { href: '/review', label: 'レビュー', icon: '📝', external: false },
   { href: '/threads', label: 'Threads', icon: '🧵', external: false },
+  { href: '/buzz', label: 'バズ', icon: '🔥', external: false },
   { href: '/notes', label: 'Note', icon: '📄', external: false },
   { href: '/analysis', label: '分析', icon: '📈', external: false },
   { href: '/api/report', label: 'レポート', icon: '📊', external: true },
