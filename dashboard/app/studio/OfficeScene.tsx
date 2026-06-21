@@ -124,8 +124,12 @@ export default function OfficeScene({ staff }: { staff: Staff[] }) {
             {[0, 1, 2, 3, 4].map((j) => (
               <g key={j}>
                 <rect x="4" y={6 + j * 14} width="18" height="9" rx="1.5" fill="#0f1622" />
-                <circle cx="8" cy={10.5 + j * 14} r="1.6" fill="#4ade80" />
-                <circle cx="13" cy={10.5 + j * 14} r="1.6" fill="#fbbf24" />
+                <circle cx="8" cy={10.5 + j * 14} r="1.6" fill="#4ade80">
+                  <animate attributeName="opacity" values="1;0.25;1" dur="1.8s" begin={`${((i * 5 + j) % 7) * 0.25}s`} repeatCount="indefinite" />
+                </circle>
+                <circle cx="13" cy={10.5 + j * 14} r="1.6" fill="#fbbf24">
+                  <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" begin={`${((i * 5 + j) % 5) * 0.3}s`} repeatCount="indefinite" />
+                </circle>
               </g>
             ))}
           </g>
