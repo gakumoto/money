@@ -112,6 +112,25 @@ def recent_activity(posted: Path, limit: int = 6) -> list[dict]:
     return acts
 
 
+def load_outbound_today(today: str) -> dict | None:
+    """build_outbound_targets.py の当日分があれば概要を返す。"""
+    p = PROJECT_ROOT / ".company" / "reports" / "outbound-today.json"
+    if not p.exists():
+        return None
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if d.get("date") != today:
+        return {"ready": False, "queries": [], "frames": []}
+    return {
+        "ready": True,
+        "queries": d.get("queries", []),
+        "frames": d.get("frames", []),
+        "checklist": d.get("checklist", []),
+    }
+
+
 def main() -> None:
     today = jst_today()
     mk = PROJECT_ROOT / ".company" / "marketing" / "drafts" / ACCOUNT
@@ -165,6 +184,20 @@ def main() -> None:
          "kpiLabel": "売上", "kpiValue": f"¥{sales['yen']:,}"},
     ]
 
+    # 次の採用マイルストーン（D: 成長イベント）
+    HIRES = [(300, "カイ", "アナリスト"), (500, "ミオ", "デザイナー"),
+             (1000, "レン", "コミュニティ"), (2000, "ツカサ", "プロダクト")]
+    next_hire = None
+    f_now = th["followers"]
+    if f_now is not None:
+        for at, name, role in HIRES:
+            if f_now < at:
+                next_hire = {"at": at, "name": name, "role": role, "remaining": at - f_now}
+                break
+
+    # 今日の絡み候補（A: ナナ半自動化）
+    outbound = load_outbound_today(today)
+
     data = {
         "generated_at": jst_now_iso(),
         "kpi": {
@@ -177,6 +210,10 @@ def main() -> None:
         },
         "staff": staff,
         "activity": recent_activity(posted_dir),
+        "company": {
+            "next_hire": next_hire,
+            "outbound": outbound,
+        },
         "note": "数字は実データ。取れない値はnull(画面で「—」)。売上は sales-manual.json で手入力可。",
     }
 

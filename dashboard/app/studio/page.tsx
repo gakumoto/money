@@ -26,6 +26,10 @@ interface StudioData {
   }
   staff: Staff[]
   activity: { who: string; action: string; what: string; at: string }[]
+  company?: {
+    next_hire: { at: number; name: string; role: string; remaining: number } | null
+    outbound: { ready: boolean; queries: string[]; frames: { situation: string; frame: string }[]; checklist?: string[] } | null
+  }
 }
 
 async function loadStudio(): Promise<StudioData | null> {
@@ -88,7 +92,7 @@ export default async function StudioPage() {
         ))}
       </header>
 
-      <StudioBoard staff={staff} activity={activity} generatedAt={d.generated_at} />
+      <StudioBoard staff={staff} activity={activity} generatedAt={d.generated_at} company={d.company} />
     </main>
   )
 }

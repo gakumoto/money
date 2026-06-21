@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-21T14:17:39+09:00",
+  "generated_at": "2026-06-21T14:48:12+09:00",
   "kpi": {
     "research": {
       "today": 1,
       "total": 258
     },
     "impressions": {
-      "recent7d": 26284,
-      "today": 3139
+      "recent7d": 26429,
+      "today": 3284
     },
     "engagement": {
       "replies7d": 0,
@@ -18,7 +18,7 @@
       "yen": 0,
       "count": 0
     },
-    "queued": 20
+    "queued": 21
   },
   "staff": [
     {
@@ -64,7 +64,7 @@
       "status": "完了",
       "detail": "無料note・記事で教育→導線へ",
       "kpiLabel": "記事",
-      "kpiValue": "21本"
+      "kpiValue": "22本"
     },
     {
       "id": "aoi",
@@ -114,5 +114,47 @@
       "at": "19:30"
     }
   ],
+  "company": {
+    "next_hire": {
+      "at": 300,
+      "name": "カイ",
+      "role": "アナリスト",
+      "remaining": 18
+    },
+    "outbound": {
+      "ready": true,
+      "queries": [
+        "Threads 始めました",
+        "発信 始めた",
+        "AIエージェント",
+        "AIで自動化",
+        "副業 はじめたて",
+        "未経験 エンジニア"
+      ],
+      "frames": [
+        {
+          "situation": "未経験で勉強中・心折れそう",
+          "frame": "分かります、ぼくも最初コード見て固まってました。いまはAIに書かせて動かす方に振ってます。今はどの言語さわってますか？"
+        },
+        {
+          "situation": "note初投稿した",
+          "frame": "初投稿おめでとうございます。ぼくも有料1本出すまで公開ボタンが怖かったです。テーマは何で書いたんですか？"
+        },
+        {
+          "situation": "AIで副業始めたい",
+          "frame": "ぼくはThreads自動投稿をAIに組ませるところから始めました。作りたいツールの当たりはついてますか？"
+        },
+        {
+          "situation": "毎日発信つづけてる人",
+          "frame": "毎日続けてるの、ほんとすごいです。ぼくもDay40でまだ手探りです。続けるコツってありますか？"
+        }
+      ],
+      "checklist": [
+        "genuine返信 5〜10件",
+        "自スレのコメントに2往復返信",
+        "22:50勝負枠の張り付き"
+      ]
+    }
+  },
   "note": "数字は実データ。取れない値はnull(画面で「—」)。売上は sales-manual.json で手入力可。"
 }

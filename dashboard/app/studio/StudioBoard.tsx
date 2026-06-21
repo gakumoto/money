@@ -22,6 +22,17 @@ interface Activity {
   what: string
   at: string
 }
+interface Company {
+  next_hire: { at: number; name: string; role: string; remaining: number } | null
+  outbound: { ready: boolean; queries: string[]; frames: { situation: string; frame: string }[]; checklist?: string[] } | null
+}
+
+// 社員ごとの実行アクション（/api/studio/run の allowlist と一致）
+const ACTIONS: Record<string, { action: string; label: string }> = {
+  sakura: { action: 'ceo', label: '社長日報を出す' },
+  sora: { action: 'research', label: 'リサーチINDEXを再生成' },
+  nana: { action: 'outbound', label: '今日の絡みリストを作る' },
+}
 
 const ACCENT: Record<string, { text: string; border: string; ring: string }> = {
   sakura: { text: 'text-rose-400', border: 'border-l-rose-500', ring: 'ring-rose-500/40' },
@@ -48,18 +59,39 @@ const INFO: Record<string, { mission: string; folder: string }> = {
 }
 
 export default function StudioBoard({
-  staff, activity, generatedAt,
+  staff, activity, generatedAt, company,
 }: {
-  staff: Staff[]; activity: Activity[]; generatedAt: string
+  staff: Staff[]; activity: Activity[]; generatedAt: string; company?: Company
 }) {
   const router = useRouter()
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [running, setRunning] = useState<string | null>(null)
+  const [lastRun, setLastRun] = useState<{ ok: boolean; msg: string } | null>(null)
 
   // ソフト更新（60秒ごと・選択パネルは閉じない）
   useEffect(() => {
     const t = setInterval(() => router.refresh(), 60000)
     return () => clearInterval(t)
   }, [router])
+
+  async function runAction(action: string) {
+    setRunning(action)
+    setLastRun(null)
+    try {
+      const res = await fetch('/api/studio/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+      const json = await res.json()
+      setLastRun({ ok: !!json.ok, msg: json.ok ? '完了しました' : `失敗: ${json.error ?? 'error'}` })
+      router.refresh()
+    } catch (e) {
+      setLastRun({ ok: false, msg: '通信エラー' })
+    } finally {
+      setRunning(null)
+    }
+  }
 
   const selected = staff.find((s) => s.id === selectedId) ?? null
   const a = selected ? ACCENT[selected.id] ?? ACCENT.sora : ACCENT.sora
@@ -96,8 +128,30 @@ export default function StudioBoard({
             <h1 className="text-base font-bold">サクラ<span className="text-rose-400">Studio</span></h1>
             <p className="text-[10px] text-zinc-500 uppercase tracking-widest">staff</p>
           </div>
-          <span className="text-[11px] text-emerald-400">● {generatedAt.slice(11, 16)}</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => runAction('refresh')}
+              disabled={running !== null}
+              className="text-[11px] px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50"
+            >
+              {running === 'refresh' ? '更新中…' : '↻ 更新'}
+            </button>
+            <span className="text-[11px] text-emerald-400">● {generatedAt.slice(11, 16)}</span>
+          </div>
         </div>
+
+        {/* 次の採用マイルストーン（D） */}
+        {company?.next_hire && (
+          <div className="mb-2 rounded-lg bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 text-[11px] text-amber-200">
+            次の採用まであと<span className="font-bold text-amber-300"> {company.next_hire.remaining} </span>人
+            ＝ {company.next_hire.name}（{company.next_hire.role}）を{company.next_hire.at}人で採用
+          </div>
+        )}
+        {lastRun && (
+          <div className={`mb-2 text-[11px] ${lastRun.ok ? 'text-emerald-400' : 'text-rose-400'}`}>
+            {lastRun.msg}
+          </div>
+        )}
         <div className="space-y-2">
           {staff.map((s) => {
             const ac = ACCENT[s.id] ?? ACCENT.sora
@@ -198,8 +252,50 @@ export default function StudioBoard({
               </ul>
             </div>
 
+            {/* ナナ: 今日の絡みキット（A） */}
+            {selected.id === 'nana' && company?.outbound?.ready && (
+              <div className="mt-4">
+                <div className="text-[10px] text-zinc-500 uppercase tracking-wider">今日の絡みキット</div>
+                <div className="mt-1 text-[11px] text-zinc-400">検索ワード（タップで探す入口）</div>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {company.outbound.queries.map((q) => (
+                    <span key={q} className="text-[11px] px-2 py-0.5 rounded bg-violet-500/15 text-violet-200">{q}</span>
+                  ))}
+                </div>
+                <div className="mt-2 text-[11px] text-zinc-400">返信フレーム（中身は自分の実体験で）</div>
+                <ul className="mt-1 space-y-1.5">
+                  {company.outbound.frames.map((f, i) => (
+                    <li key={i} className="rounded-lg bg-black/30 p-2">
+                      <div className="text-[10px] text-zinc-500">{f.situation}</div>
+                      <div className="text-[12px] text-zinc-300">{f.frame}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* 実行ボタン（B） */}
+            {ACTIONS[selected.id] && (
+              <div className="mt-5">
+                <button
+                  onClick={() => runAction(ACTIONS[selected.id].action)}
+                  disabled={running !== null}
+                  className={`w-full rounded-lg py-2.5 text-sm font-bold transition ${
+                    running === ACTIONS[selected.id].action
+                      ? 'bg-zinc-700 text-zinc-400'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-50'
+                  }`}
+                >
+                  {running === ACTIONS[selected.id].action ? '実行中…' : `▶ ${ACTIONS[selected.id].label}`}
+                </button>
+                {lastRun && (
+                  <div className={`mt-2 text-[11px] ${lastRun.ok ? 'text-emerald-400' : 'text-rose-400'}`}>{lastRun.msg}</div>
+                )}
+              </div>
+            )}
+
             <div className="mt-5 text-[11px] text-zinc-600">
-              ※ 表示は読み取り専用。実行ボタン（仕事を走らせる）は次フェーズで追加可能。
+              ※ ボタンはローカルの許可済みスクリプトだけを実行します。
             </div>
           </div>
         </div>
