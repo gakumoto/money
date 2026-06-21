@@ -1,0 +1,30 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 教育
+template_type: "朝・気づき(本文)＋コメント(本体)"
+topic: "ChatGPTとClaudeどっち使う問題・コメで自分の選択と理由"
+publish_at: 2026-06-23T08:10:00+09:00
+hook_pattern: A
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "教えるでなく自分の選択として・Phase1=学ぶ姿勢・コメ欄に本体"
+---
+【本文】
+AIで副業はじめるとき、
+「ChatGPTとClaude、どっち？」
+で止まる人、多いと思います🤔
+
+ぼくの答えは、コメントに置きました。
+【コメント欄】
+ぼくはClaudeを使ってます。
+理由は、会話を覚えてて
+長いやり取りに強いから。
+
+ChatGPTのほうが情報量は多いけど、
+毎回0から説明し直すのがしんどくて。
+
+正解はないので、
+両方少しずつ触ってから決めるのが、
+いちばん安いです。
