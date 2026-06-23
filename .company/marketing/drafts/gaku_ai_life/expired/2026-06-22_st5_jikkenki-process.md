@@ -1,7 +1,7 @@
 ---
 account: gaku_ai_life
 type: draft
-status: queued
+status: expired
 purpose: 集客
 template_type: "深夜・過程/弱さ開示(当たり型)＋コメント欄(固定匂わせ)"
 topic: "実験記=成功談でなく0円からの過程を残す記録・コメントで固定匂わせ"
@@ -12,6 +12,8 @@ golden_slot: true
 source_research: "当たり型③過程開示(369v/L16)・note誘導の橋渡し"
 applied_feedback:
   - "深夜最強枠=過程開示・本文にリンクなし/コメントで固定匂わせ(削除リスク回避)・勝負枠30分張り付き"
+expired_reason: "480分遅れ(>120分)で時間帯ズレ・自動退避"
+expired_at: 2026-06-23T06:50:46+09:00
 ---
 【本文】
 「実験記」ってタイトルで
