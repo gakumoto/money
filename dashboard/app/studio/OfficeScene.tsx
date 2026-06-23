@@ -82,6 +82,16 @@ function Person({
   )
 }
 
+// 「いま◯◯中」吹き出しの役割別ラベル
+const ACTION_LABEL: Record<string, string> = {
+  sora: 'リサーチ中',
+  erika: '投稿中',
+  nana: '絡み中',
+  yui: 'note執筆中',
+  aoi: '営業中',
+  sakura: '巡回中',
+}
+
 // ── デスク＋モニタ＋着席キャラ（名札は最前面レイヤーで別途描画） ──
 function Workstation({
   gx, gy, staff, selected, onSelect,
@@ -122,6 +132,22 @@ function Workstation({
           ))}
         </g>
       )}
+      {/* 「いま◯◯中」吹き出し（稼働中・ときどき出る） */}
+      {active && (() => {
+        const label = ACTION_LABEL[staff.id] ?? '作業中'
+        const w = label.length * 11 + 16
+        const by = dy - 20
+        return (
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0" dur="8s"
+              begin={`${(gx % 4) * 1.7}s`} repeatCount="indefinite" />
+            <rect x={dx - w / 2} y={by - 13} width={w} height={16} rx={8}
+              fill="#0d1016f0" stroke={c.screen} strokeWidth={0.8} />
+            <polygon points={`${dx - 3},${by + 3} ${dx + 3},${by + 3} ${dx},${by + 7}`} fill="#0d1016f0" />
+            <text x={dx} y={by - 1} textAnchor="middle" fontSize="9.5" fill={c.screen}>{label}</text>
+          </g>
+        )
+      })()}
     </g>
   )
 }

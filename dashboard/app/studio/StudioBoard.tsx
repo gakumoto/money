@@ -82,6 +82,11 @@ export default function StudioBoard({
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [running, setRunning] = useState<string | null>(null)
   const [lastRun, setLastRun] = useState<{ ok: boolean; msg: string } | null>(null)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 80)
+    return () => clearTimeout(t)
+  }, [])
 
   // ソフト更新（60秒ごと・選択パネルは閉じない）
   useEffect(() => {
@@ -180,7 +185,7 @@ export default function StudioBoard({
                     </span>
                   </div>
                   <div className="mt-1 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
-                    <div className="h-full bg-emerald-500" style={{ width: `${g.pct}%` }} />
+                    <div className="h-full bg-emerald-500 transition-all duration-[1200ms] ease-out" style={{ width: `${mounted ? g.pct : 0}%` }} />
                   </div>
                 </div>
               ))}
