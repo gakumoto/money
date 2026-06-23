@@ -91,19 +91,37 @@ function Workstation({
   const c = SEAT[staff.id] ?? SEAT.sora
   const active = staff.status === '完了' || staff.status === '巡回中'
   const [cx, cy] = P(gx + 0.85, gy + 0.05)
+  const begin = `${(gx % 3) * 0.5}s`
+  const [dx, dy] = P(gx + 0.85, gy + 0.25, 42) // タイピング「•••」位置（モニタ上）
   return (
     <g onClick={() => onSelect?.(staff.id)} style={{ cursor: 'pointer' }}>
       {/* 選択ハイライト（足元のリング） */}
       {selected && <ellipse cx={cx} cy={cy} rx={21} ry={9} fill="none" stroke={c.screen} strokeWidth={2.5} />}
-      {/* 着席キャラ（デスクの奥＝先に描画して下半身を隠す） */}
-      <Person gx={gx + 0.85} gy={gy + 0.05} body={c.body} hair={c.hair} />
+      {/* 着席キャラ（全員わずかに揺れる＝在席。稼働中は揺れ大きめ） */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values={active ? '0 0; 0 -1.8; 0 0' : '0 0; 0 -0.8; 0 0'}
+          dur={active ? '2.2s' : '3.4s'} begin={begin} repeatCount="indefinite" />
+        <Person gx={gx + 0.85} gy={gy + 0.05} body={c.body} hair={c.hair} />
+      </g>
       {/* デスク天板 */}
       <Box gx={gx} gy={gy} w={1.7} d={1.0} h={13} top="#b98a52" right="#8a6038" front="#75502f" />
-      {/* モニタ（手前面=画面） */}
+      {/* モニタ（手前面=画面・稼働中は画面色） */}
       <Box
         gx={gx + 0.35} gy={gy + 0.28} w={0.95} d={0.18} h={20} base={13}
         top="#11161d" right="#1a222c" front={active ? c.screen : '#33414f'}
       />
+      {/* タイピング中の「•••」 */}
+      {active && (
+        <g>
+          {[0, 1, 2].map((k) => (
+            <circle key={k} cx={dx - 6 + k * 6} cy={dy} r={1.8} fill={c.screen}>
+              <animate attributeName="opacity" values="0.15;1;0.15" dur="1.2s"
+                begin={`${k * 0.2}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
+        </g>
+      )}
     </g>
   )
 }
@@ -303,7 +321,12 @@ export default function OfficeScene({
         {selectedId === 'sakura' && (
           <ellipse cx={skx} cy={sky} rx={21} ry={9} fill="none" stroke={SEAT.sakura.screen} strokeWidth={2.5} />
         )}
-        <Person gx={4.0} gy={5.5} body={SEAT.sakura.body} hair={SEAT.sakura.hair} standing />
+        {/* 巡回中＝左右にゆっくり歩く */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="0 0; 14 0; 14 0; 0 0; 0 0; -14 0; -14 0; 0 0" dur="9s" repeatCount="indefinite" />
+          <Person gx={4.0} gy={5.5} body={SEAT.sakura.body} hair={SEAT.sakura.hair} standing />
+        </g>
       </g>
     ),
   }
