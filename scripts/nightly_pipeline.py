@@ -31,11 +31,10 @@ load_dotenv(SCRIPT_DIR / ".env")
 PROJECT_ROOT = SCRIPT_DIR.parent
 
 # queued/ にこの本数以上たまっていたら、その夜の生成をスキップする（バックログ防止）。
-# 2026-06-14: 1日15本配信(朝4/昼3/夕4/夜1/深夜3)に増枠したため上限も引き上げ。
-# 消費は約15本/日。24にしておくと生成後でも最大 ~39本（約2.6日分）まで許容し、
-# PC が 1〜2 晩落ちても枯れず、かつ溜まりすぎて鮮度が崩れない範囲に収める。
-# .env の THREADS_MAX_QUEUE で上書き可。
-MAX_QUEUE = int(os.getenv("THREADS_MAX_QUEUE", "24"))
+# 2026-06-26: 型別実数で1日15→7本に削減（♡が付く型D/H/Cに集約）。消費は約7本/日。
+# 上限14にしておくと生成後でも最大 ~21本（約3日分）まで許容し、PCが1〜2晩落ちても
+# 枯れず、かつ溜まりすぎて鮮度が崩れない範囲に収める。.env の THREADS_MAX_QUEUE で上書き可。
+MAX_QUEUE = int(os.getenv("THREADS_MAX_QUEUE", "14"))
 
 # Discord 通知ヘルパーをインポート
 sys.path.insert(0, str(SCRIPT_DIR))
@@ -177,7 +176,7 @@ def main():
 
     # --- バックログ防止ゲート（2026-06-14 D-049）---
     # queued がすでに十分あるなら、その夜の生成をまるごとスキップする。
-    # 生成を消費(約10本/日)に合わせ、青天井に溜まって「5日遅れ」になるのを防ぐ。
+    # 生成を消費(約7本/日)に合わせ、青天井に溜まって「5日遅れ」になるのを防ぐ。
     accounts_now = find_active_accounts()
     queued_now = count_queued(accounts_now)
     if queued_now >= MAX_QUEUE:
