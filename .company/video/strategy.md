@@ -27,9 +27,15 @@ status: active
 5. **量産体制**: 決定形を「投稿文→MP4自動生成」スクリプトにして、Threadsの7本デーに動画も乗せる
 
 ## 制作ツールの方針
-- **第1段階（検証）**: CapCut（無料・テンプレ・スマホ/PC可）で手動制作。まず"形"を当てる
-- **第2段階（量産）**: フォーマット確定後、`scripts/` に **投稿文→縦型MP4生成**（ffmpeg or moviepy）を実装。テロップ自動レイアウト＋BGM合成。SEの強みを活かす自動化
-- ※ いきなり自動化しない。**1つ伸びる形を見つけてから**コードに落とす（むだ撃ち防止＝Threadsと同じ教訓）
+**★ 2026-06-26: Claude内で完結する自動生成を実装済み（CapCut不要）★**
+- `scripts/make_slide_video.py` … **投稿文 → 縦型MP4スライド**（1080×1920・テロップ自動レイアウト・フェード・**生成BGM**）。
+  - ffmpeg はシステム導入不要（`imageio-ffmpeg` のバンドル版を使用）。日本語フォントは Windows 同梱（YuGoth/Meiryo）。
+  - 依存: `pip install pillow numpy imageio-ffmpeg`（venv に導入済み）。
+  - 使い方: `python scripts/make_slide_video.py --demo 1 --out .company/video/assets/x.mp4`（内蔵3デモ）／自作は `--spec spec.json`。
+  - 画面上の絵文字はフォント豆腐化するため自動除去（余韻は言葉＋BGMで出す。絵文字はSNSキャプション側に残す）。
+- **第1バッチ生成済み**: `assets/2026-06-26_v1_nakama.mp4`（仲間呼びかけ）/ `v2_1month`（1ヶ月の本音）/ `v3_zero`（副業0円）。
+- ※ 完成MP4/PNG/WAV は git 管理外（`.gitignore`）。**スクリプトと spec から再生成可能**。
+- 残課題（任意）: 文字送りアニメ・背景B-roll・自動キャプション/ハッシュタグ生成・Threads動画API投稿。
 
 ## 配布の現実
 - **Threads**: API は画像対応済（`threads_auto_post.py`）。動画はまず手動投稿、後で video 対応を追加

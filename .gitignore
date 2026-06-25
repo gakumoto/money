@@ -24,6 +24,11 @@ scripts/logs/
 # Cache
 .cache/
 
+# 動画PR部門の生成バイナリ（スクリプトから再生成可能・gitに載せない）
+.company/video/assets/*.mp4
+.company/video/assets/*.wav
+.company/video/assets/*.png
+
 # Claude Code internals
 .claude/
 .agents/
