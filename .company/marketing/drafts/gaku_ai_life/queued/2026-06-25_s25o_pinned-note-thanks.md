@@ -1,0 +1,20 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 販売
+template_type: "深夜0時・未完型/note誘導(差し出す)"
+topic: "深夜にnote読んでくれた人がいた・固定に置いてます"
+publish_at: 2026-06-26T00:10:00+09:00
+hook_pattern: G
+voice_model: "2026-06-07 本物の声モデル準拠"
+applied_feedback:
+  - "売りつけNG・差し出す型・有料note公開済(6/20)前提・1日2回noteリンク貼らない"
+---
+【本文】
+こんな時間に、
+ぼくのnoteを読んでくれた人がいたみたいで、
+ちょっと泣きそうです🥹
+
+同じ場所で立ち止まってる人がいたら、
+固定に置いてます。

@@ -1,0 +1,21 @@
+---
+account: gaku_ai_life
+type: draft
+status: queued
+purpose: 教育
+template_type: "深夜・制作過程(AI会社⑩)"
+topic: "AIが書いて、ぼくは公開ボタン押すだけだった夜"
+publish_at: 2026-06-25T23:30:00+09:00
+hook_pattern: B
+voice_model: "2026-06-07 本物の声モデル準拠"
+source_plan: "ai-company-series ⑩制作過程"
+applied_feedback:
+  - "深夜23時台=強・制作過程の本音・温度"
+---
+【本文】
+さっき、ユイさん(AI制作担当)が書いた文章、
+ぼくはほぼ触らず、
+公開ボタンだけ押しました。
+
+これでいいのかな、
+って毎回ちょっと思う🤔

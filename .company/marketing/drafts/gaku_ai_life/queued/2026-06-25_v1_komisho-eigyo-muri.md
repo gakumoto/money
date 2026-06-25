@@ -1,0 +1,21 @@
+---
+account: gaku_ai_life
+type: draft
+status: expired
+purpose: 集客
+template_type: "朝・問いかけ型(コミュ障共感/コア声)"
+publish_at: 2026-06-26T07:00:00+09:00
+hook_pattern: 問いかけ
+voice_model: "2026-06-23 コア(盛らない・つまらんけど・人に会わず)"
+golden_slot: false
+applied_feedback:
+  - "コア声・5年前の自分・営業ゼロと盛らない・実験記/Dayなし"
+expired_reason: "902分遅れ(>120分)で時間帯ズレ・自動退避"
+expired_at: 2026-06-25T22:02:16+09:00
+---
+【本文】
+副業したいけど、人に会うのも営業も無理。
+って人、ぼくだけじゃないはず🥹
+
+もう諦めて、AIと黙々やる方に振りました。
+同じタイプの人、どうやって稼ぐつもりですか？
