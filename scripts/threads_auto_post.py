@@ -172,6 +172,82 @@ def move_to_expired(path: Path, account: str, reason: str) -> Path:
     return new_path
 
 
+# スライド時の衝突判定幅（分）: 既存キューの publish_at とこの幅以内なら同枠とみなす。
+SLOT_COLLISION_MIN = 20
+# 1本のスライド上限。これを超えても枠が空かない場合だけ expired に落とす（無限延命防止）。
+MAX_RESCHEDULE = 6
+
+
+def queued_publish_times(account: str, exclude: Path | None = None) -> list[dt.datetime]:
+    """queued/ 内の publish_at(tz付き) 一覧。exclude は自分自身を除外用."""
+    queued = PROJECT_ROOT / ".company" / "marketing" / "drafts" / account / "queued"
+    out: list[dt.datetime] = []
+    if not queued.exists():
+        return out
+    for f in queued.glob("*.md"):
+        if exclude is not None and f.resolve() == exclude.resolve():
+            continue
+        pd = publish_dt_of(f)
+        if pd is not None:
+            out.append(pd.astimezone())
+    return out
+
+
+def reschedule_stale(path: Path, account: str, now_aware: dt.datetime, orig_pub: dt.datetime) -> Path:
+    """鮮度切れの下書きを捨てず、時間帯(時刻)を保ったまま次の空き枠へスライドする.
+
+    - 元の時刻(HH:MM:SS)を維持 → 朝の投稿は朝のまま、深夜は深夜のまま流れる
+    - now+30分より後で、既存キューと SLOT_COLLISION_MIN 以内に重ならない最初の日を探す
+    - MAX_RESCHEDULE 回スライドしても枠が無ければ expired/ に退避（無限延命防止）
+    """
+    # スライド回数をカウント（規定超で諦める）
+    try:
+        d = parse_draft(path)
+        count = int(d["frontmatter"].get("reschedule_count", "0") or "0")
+    except (ValueError, OSError):
+        count = 0
+    if count >= MAX_RESCHEDULE:
+        return move_to_expired(
+            path, account, f"{MAX_RESCHEDULE}回スライドしても枠が空かず・退避"
+        )
+
+    target_time = orig_pub.astimezone().timetz()  # 維持する時刻(tz付き)
+    occupied = queued_publish_times(account, exclude=path)
+    buffer = now_aware + dt.timedelta(minutes=30)
+
+    cand_date = now_aware.date()
+    chosen = None
+    for _ in range(0, 21):  # 最大3週間先まで空き枠を探す
+        cand = dt.datetime.combine(cand_date, target_time)
+        collides = cand <= buffer or any(
+            abs((cand - o).total_seconds()) < SLOT_COLLISION_MIN * 60 for o in occupied
+        )
+        if not collides:
+            chosen = cand
+            break
+        cand_date += dt.timedelta(days=1)
+
+    if chosen is None:
+        return move_to_expired(path, account, "3週間先まで空き枠なし・退避")
+
+    text = path.read_text(encoding="utf-8")
+    new_iso = chosen.isoformat(timespec="seconds")
+    # publish_at を書き換え
+    if re.search(r"^publish_at:.*$", text, re.MULTILINE):
+        text = re.sub(r"^publish_at:.*$", f"publish_at: {new_iso}", text, count=1, flags=re.MULTILINE)
+    else:
+        text = re.sub(r"\n---\s*\n", f"\npublish_at: {new_iso}\n---\n", text, count=1)
+    # status は queued のまま維持（expired にしない）
+    text = re.sub(r"(status:\s*)\w+", r"\1queued", text, count=1)
+    # reschedule_count を更新 / 追記
+    if re.search(r"^reschedule_count:.*$", text, re.MULTILINE):
+        text = re.sub(r"^reschedule_count:.*$", f"reschedule_count: {count + 1}", text, count=1, flags=re.MULTILINE)
+    else:
+        text = re.sub(r"\n---\s*\n", f"\nreschedule_count: {count + 1}\n---\n", text, count=1)
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__, file=sys.stderr)
@@ -194,8 +270,10 @@ def main():
         print(f"[auto_post] {account}: 投稿対象なし ({now.strftime('%H:%M')})")
         sys.exit(0)
 
-    # 鮮度ガード (D-053): 古い順に見て、STALE_MINUTES 以上遅れたものは
-    # 時間帯がズレたとみなし expired/ に退避。最初の「鮮度OK」な1本を投稿する。
+    # 鮮度ガード (D-053 → 2026-06-26 改修): 古い順に見て、STALE_MINUTES 以上
+    # 遅れたものは「時間帯がズレた」とみなす。ただし捨てずに、時刻を保ったまま
+    # 次の空き枠へスライドして queued に残す（取りこぼしゼロ化・A案）。
+    # 最初の「鮮度OK」な1本を投稿する。
     now_aware = now.astimezone()
     target = None
     for f in due:
@@ -204,12 +282,15 @@ def main():
             late_min = (now_aware - pub_dt.astimezone()).total_seconds() / 60
             if late_min > STALE_MINUTES:
                 if dry_run:
-                    print(f"[auto_post] (dry-run) 鮮度切れ退避対象: {f.name} ({int(late_min)}分遅れ)")
+                    print(f"[auto_post] (dry-run) 鮮度切れ→スライド対象: {f.name} ({int(late_min)}分遅れ)")
                 else:
-                    move_to_expired(
-                        f, account, f"{int(late_min)}分遅れ(>{STALE_MINUTES}分)で時間帯ズレ・自動退避"
-                    )
-                    print(f"[auto_post] 鮮度切れ退避: {f.name} ({int(late_min)}分遅れ) -> expired/")
+                    moved = reschedule_stale(f, account, now_aware, pub_dt)
+                    if moved.parent.name == "expired":
+                        print(f"[auto_post] スライド上限/枠無し→退避: {f.name} -> expired/")
+                    else:
+                        new_pub = publish_dt_of(moved)
+                        when = new_pub.strftime("%m/%d %H:%M") if new_pub else "?"
+                        print(f"[auto_post] 鮮度切れ→次の空き枠へスライド: {f.name} ({int(late_min)}分遅れ) -> {when}")
                 continue
         target = f
         break
